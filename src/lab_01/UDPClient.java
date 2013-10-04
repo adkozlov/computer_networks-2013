@@ -1,6 +1,7 @@
 package lab_01;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -10,7 +11,7 @@ import java.util.TimerTask;
 
 public class UDPClient implements Runnable {
 
-    public static final int NAME_LENGTH = 10;
+    private static final String FORMAT = "%-10s";
 
     private final String computerName;
     private final String lastName;
@@ -19,34 +20,12 @@ public class UDPClient implements Runnable {
     private final int ip;
 
     public UDPClient(String computerName, String lastName) throws UnknownHostException {
-        String tempComputerName = new String(computerName);
-        while (tempComputerName.length() < NAME_LENGTH) {
-            tempComputerName += ' ';
-        }
-
-        String tempLastName = new String(lastName);
-        while (tempLastName.length() < NAME_LENGTH) {
-            tempLastName += ' ';
-        }
-
-        this.computerName = tempComputerName;
-        this.lastName = tempLastName;
-
         localHost = InetAddress.getLocalHost();
+        ip = new BigInteger(localHost.getAddress()).intValue();
         broadcastHost = InetAddress.getByName("255.255.255.255");
 
-        ip = intFromBytes(localHost.getAddress());
-    }
-
-    public static int intFromBytes(byte[] bytes) {
-        int result = 0;
-
-        for (byte b : bytes) {
-            result <<= 8;
-            result |= b;
-        }
-
-        return result;
+        this.computerName = String.format(FORMAT, computerName);
+        this.lastName = String.format(FORMAT, lastName);
     }
 
     public static final long PERIOD = 500;
@@ -60,8 +39,7 @@ public class UDPClient implements Runnable {
                     try {
                         DatagramSocket clientSocket = new DatagramSocket();
 
-                        String message = "" + ip + '\u0000' + computerName + '\u0000' + System.currentTimeMillis() + '\u0000' + lastName;
-                        byte[] buffer = message.getBytes();
+                        byte[] buffer = new Message(ip, computerName, System.currentTimeMillis(), lastName).toByteArray();
 
                         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, broadcastHost, UDPServer.PORT_NUMBER);
                         clientSocket.send(packet);

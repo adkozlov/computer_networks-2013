@@ -1,1 +1,1 @@
-Labs for "Computer networks'" course.
+Labs for "Computer networks" course.
