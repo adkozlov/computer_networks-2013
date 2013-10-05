@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 public class Message {
 
     public static final Charset UTF8_CHARSET = Charset.forName("UTF8");
+    public static final int BUFFER_LENGTH = 40;
 
     private final int ip;
     private final String computerName;
@@ -17,10 +18,10 @@ public class Message {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-        ip = new BigInteger(readKBytesFromStream(objectInputStream, 4)).intValue();
-        computerName = new String(readKBytesFromStream(objectInputStream, 10), UTF8_CHARSET);
-        time = new BigInteger(readKBytesFromStream(objectInputStream, 8)).longValue();
-        lastName = new String(readKBytesFromStream(objectInputStream, 10), UTF8_CHARSET);
+        ip = readBigIntegerFromStream(objectInputStream, 4).intValue();
+        computerName = readStringFromStream(objectInputStream, 10);
+        time = readBigIntegerFromStream(objectInputStream, 8).longValue();
+        lastName = readStringFromStream(objectInputStream, 10);
     }
 
     public Message(int ip, String computerName, long time, String lastName) {
@@ -28,6 +29,14 @@ public class Message {
         this.computerName = computerName;
         this.time = time;
         this.lastName = lastName;
+    }
+
+    private static BigInteger readBigIntegerFromStream(final ObjectInputStream stream, int k) throws IOException {
+        return new BigInteger(readKBytesFromStream(stream, k));
+    }
+
+    private static String readStringFromStream(final ObjectInputStream stream, int k) throws IOException {
+        return new String(readKBytesFromStream(stream, k), UTF8_CHARSET);
     }
 
     private static byte[] readKBytesFromStream(final ObjectInputStream stream, int k) throws IOException {

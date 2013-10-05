@@ -22,7 +22,7 @@ public class UDPClient implements Runnable {
     public UDPClient(String computerName, String lastName) throws UnknownHostException {
         localHost = InetAddress.getLocalHost();
         ip = new BigInteger(localHost.getAddress()).intValue();
-        broadcastHost = InetAddress.getByName("255.255.255.255");
+        broadcastHost = InetAddress.getByName("127.0.0.1");
 
         this.computerName = String.format(FORMAT, computerName);
         this.lastName = String.format(FORMAT, lastName);

@@ -31,7 +31,6 @@ public class UDPServer implements Runnable {
     }
 
     public static final int PORT_NUMBER = 1234;
-    private static final int BUFFER_LENGTH = 40;
     public static final long PING = 3 * UDPClient.PERIOD;
 
     Map<String, Long> servers = new HashMap<>();
@@ -42,7 +41,7 @@ public class UDPServer implements Runnable {
             DatagramSocket socket = new DatagramSocket(PORT_NUMBER);
 
             while (true) {
-                byte[] buffer = new byte[BUFFER_LENGTH];
+                byte[] buffer = new byte[Message.BUFFER_LENGTH];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
 
