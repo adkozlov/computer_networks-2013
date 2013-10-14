@@ -27,29 +27,35 @@ public class UDPServer implements Runnable {
 
                 System.out.println(servers.keySet());
             }
-        }, 0, PING);
+        }, 0, PERIOD);
     }
 
     public static final int PORT_NUMBER = 1234;
     public static final long PING = 3 * UDPClient.PERIOD;
+    private static final long PERIOD = UDPClient.PERIOD / 5;
 
     Map<String, Long> servers = new HashMap<>();
 
     @Override
     public void run() {
+        DatagramSocket socket = null;
         try {
-            DatagramSocket socket = new DatagramSocket(PORT_NUMBER);
+            socket = new DatagramSocket(PORT_NUMBER);
+        } catch (SocketException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
 
-            while (true) {
+        while (true) {
+            try {
                 byte[] buffer = new byte[Message.BUFFER_LENGTH];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
 
                 Message message = new Message(packet.getData());
                 servers.put(message.getLastName().trim(), message.getTime());
+            } catch (IOException e) {
+                System.err.println(e.getLocalizedMessage());
             }
-        } catch (IOException e) {
-            System.err.println(e.getLocalizedMessage());
         }
     }
 }

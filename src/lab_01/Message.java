@@ -3,11 +3,12 @@ package lab_01;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class Message {
 
     public static final Charset UTF8_CHARSET = Charset.forName("UTF8");
-    public static final int BUFFER_LENGTH = 40;
+    public static final int BUFFER_LENGTH = 52;
 
     private final int ip;
     private final String computerName;
@@ -15,13 +16,10 @@ public class Message {
     private final String lastName;
 
     public Message(byte[] bytes) throws IOException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-        ip = readBigIntegerFromStream(objectInputStream, 4).intValue();
-        computerName = readStringFromStream(objectInputStream, 10);
-        time = readBigIntegerFromStream(objectInputStream, 8).longValue();
-        lastName = readStringFromStream(objectInputStream, 10);
+        ip = readBigIntegerFromStream(bytes, 0, 4).intValue();
+        computerName = readStringFromStream(bytes, 4, 24);
+        time = readBigIntegerFromStream(bytes, 8, 32).longValue();
+        lastName = readStringFromStream(bytes, 32, 52);
     }
 
     public Message(int ip, String computerName, long time, String lastName) {
@@ -31,31 +29,38 @@ public class Message {
         this.lastName = lastName;
     }
 
-    private static BigInteger readBigIntegerFromStream(final ObjectInputStream stream, int k) throws IOException {
-        return new BigInteger(readKBytesFromStream(stream, k));
+    private static BigInteger readBigIntegerFromStream(byte[] bytes, int from, int to) throws IOException {
+        return new BigInteger(Arrays.copyOfRange(bytes, from, to));
     }
 
-    private static String readStringFromStream(final ObjectInputStream stream, int k) throws IOException {
-        return new String(readKBytesFromStream(stream, k), UTF8_CHARSET);
-    }
-
-    private static byte[] readKBytesFromStream(final ObjectInputStream stream, int k) throws IOException {
-        byte[] result = new byte[k];
-        stream.read(result, 0, k);
-        return result;
+    private static String readStringFromStream(byte[] bytes, int from, int to) throws IOException {
+        return new String(Arrays.copyOfRange(bytes, from, to), UTF8_CHARSET);
     }
 
     public byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        byte[] buffer = new byte[Message.BUFFER_LENGTH];
 
-        objectOutputStream.writeInt(ip);
-        objectOutputStream.write(computerName.getBytes(UTF8_CHARSET));
-        objectOutputStream.writeLong(time);
-        objectOutputStream.write(lastName.getBytes(UTF8_CHARSET));
+        byte[] ipBuffer = BigInteger.valueOf(ip).toByteArray();
+        for (int i = 0; i < ipBuffer.length; i++) {
+            buffer[i] = ipBuffer[i];
+        }
 
-        objectOutputStream.close();
-        return byteArrayOutputStream.toByteArray();
+        byte[] computerNameBuffer = computerName.getBytes(UTF8_CHARSET);
+        for (int i = 0; i < computerNameBuffer.length; i++) {
+            buffer[4 + i] = computerNameBuffer[i];
+        }
+
+        byte[] timeBuffer = BigInteger.valueOf(time).toByteArray();
+        for (int i = 0; i < timeBuffer.length; i++) {
+            buffer[24 + i] = timeBuffer[i];
+        }
+
+        byte[] lastNameBuffer = lastName.getBytes(UTF8_CHARSET);
+        for (int i = 0; i < lastNameBuffer.length; i++) {
+            buffer[32 + i] = lastNameBuffer[i];
+        }
+
+        return buffer;
     }
 
     public String getLastName() {
