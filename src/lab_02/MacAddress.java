@@ -1,5 +1,7 @@
 package lab_02;
 
+import java.util.Arrays;
+
 /**
  * @author adkozlov
  */
@@ -13,5 +15,10 @@ public class MacAddress {
 
     public byte[] getMac() {
         return mac;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(mac);
     }
 }

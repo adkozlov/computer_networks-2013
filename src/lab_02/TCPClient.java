@@ -1,9 +1,5 @@
 package lab_02;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -16,11 +12,9 @@ import java.util.Timer;
 /**
  * @author adkozlov
  */
-public class TCPClient extends JFrame implements Runnable {
+public class TCPClient implements Runnable {
 
     private static final TCPClient INSTANCE = new TCPClient();
-    private static final String APPLICATION_LABEL = "Messenger";
-    private static final String SEND_BUTTON_LABEL = "Send";
     private static final int BUFFER_LENGTH = 4096;
 
     public static TCPClient getInstance() {
@@ -33,35 +27,8 @@ public class TCPClient extends JFrame implements Runnable {
     private Map<MacAddress, Host> hosts = new HashMap<>();
     private Map<MacAddress, Long> counts = new HashMap<>();
 
-    private final JTextArea textArea = new JTextArea();
-    private final JTextField textField = new JTextField();
-    private final JButton sendButton = new JButton(SEND_BUTTON_LABEL);
-
     private TCPClient() {
-        super(APPLICATION_LABEL);
-
-        Container content = getContentPane();
-        content.setBackground(Color.white);
-        content.setLayout(new GridLayout());
-
-        textArea.setEditable(false);
-        content.add(textArea);
-        content.add(textField);
-        content.add(sendButton);
-
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textArea.append(textField.getText() + "\n");
-                textField.setText("");
-            }
-        });
-
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        pack();
-        setSize(300, 900);
-        setResizable(false);
-        setVisible(true);
+        new Messenger();
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
