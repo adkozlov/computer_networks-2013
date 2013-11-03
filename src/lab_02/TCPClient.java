@@ -87,6 +87,8 @@ public class TCPClient implements Runnable {
             serverSocket = new ServerSocket(TCP_PORT);
 
             while (true) {
+                System.out.println(offsets.keySet());
+
                 if (!offsets.isEmpty()) {
                     Socket socket = serverSocket.accept();
                     InputStream is = socket.getInputStream();

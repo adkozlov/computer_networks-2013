@@ -19,7 +19,18 @@ public class MacAddress {
 
     @Override
     public String toString() {
-        return Arrays.toString(mac);
+        String result = "";
+
+        for (int i = 0; i < mac.length - 1; i++) {
+            result += hexByte(mac[i]) + ":";
+        }
+        result += hexByte(mac[mac.length - 1]);
+
+        return result;
+    }
+
+    private static String hexByte(byte b) {
+        return String.format("%02x", b&0xff);
     }
 
     @Override
