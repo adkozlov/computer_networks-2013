@@ -8,11 +8,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.SortedSet;
+import java.util.TimerTask;
+import java.util.TreeSet;
 
 /**
  * @author adkozlov
  */
 public class Messenger extends JFrame {
+
+    private static final Messenger INSTANCE = new Messenger();
+    private static final long PERIOD = 100;
+
+    public static Messenger getInstance() {
+        return INSTANCE;
+    }
 
     public static final String BUTTON_LABEL = "Send";
     public static final String APPLICATION_LABEL = "Messenger";
@@ -25,7 +35,7 @@ public class Messenger extends JFrame {
     private final JTextField newMessageTextField = new JTextField();
     private final JButton sendButton = new JButton(BUTTON_LABEL);
 
-    public Messenger() {
+    private Messenger() {
         super(APPLICATION_LABEL);
 
         Container content = getContentPane();
@@ -73,16 +83,35 @@ public class Messenger extends JFrame {
         });
         sendButton.setSize(40, 20);
 
+        new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                receiveMessages();
+
+                StringBuilder sb = new StringBuilder();
+                for (TCPMessage message : messages) {
+                    sb.append(message);
+                }
+                messagesTextArea.setText(sb.toString());
+            }
+        }, 0, PERIOD);
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
-        setSize(300, 600);
+        setSize(600, 600);
         setVisible(true);
     }
 
+    private final SortedSet<TCPMessage> messages = new TreeSet<>();
+
     private void sendMessage() {
         if (!newMessageTextField.getText().equals("")) {
-            messagesTextArea.append(newMessageTextField.getText() + "\n");
+            TCPClient.getInstance().sendMessage(newMessageTextField.getText());
             newMessageTextField.setText("");
         }
+    }
+
+    public void receiveMessages() {
+        messages.addAll(TCPClient.getInstance().getMessages());
     }
 }

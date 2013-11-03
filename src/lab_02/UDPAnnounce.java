@@ -41,7 +41,7 @@ public class UDPAnnounce implements IMessage {
 
         dos.writeLong(currentTime);
 
-        if (mac != null) {
+        if (mac.getMac() != null) {
             dos.write(mac.getMac());
         } else {
             throw new IOException();

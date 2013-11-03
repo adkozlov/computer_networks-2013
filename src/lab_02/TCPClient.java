@@ -1,13 +1,10 @@
 package lab_02;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
 import java.util.*;
-import java.util.List;
-import java.util.Timer;
 
 /**
  * @author adkozlov
@@ -16,6 +13,7 @@ public class TCPClient implements Runnable {
 
     private static final TCPClient INSTANCE = new TCPClient();
     private static final int BUFFER_LENGTH = 4096;
+    private static final long PERIOD = 500;
 
     public static TCPClient getInstance() {
         return INSTANCE;
@@ -23,72 +21,93 @@ public class TCPClient implements Runnable {
 
     public static final int TCP_PORT = 1235;
 
-    private List<TCPMessage> messages = new ArrayList<>();
-    private Map<MacAddress, Host> hosts = new HashMap<>();
-    private Map<MacAddress, Long> counts = new HashMap<>();
+    private List<TCPMessage> myMessages = new ArrayList<>();
+    private SortedSet<TCPMessage> messages = new TreeSet<>();
+    private Map<MacAddress, Integer> counts = new HashMap<>();
+    private Map<MacAddress, Long> offsets = new HashMap<>();
+
+    public SortedSet<TCPMessage> getMessages() {
+        return Collections.unmodifiableSortedSet(messages);
+    }
 
     private TCPClient() {
-        new Messenger();
+        Messenger.getInstance();
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                DatagramSocket udpSocket = null;
                 try {
-                    DatagramSocket socket = new DatagramSocket(UDPAnnouncer.UDP_PORT);
+                    udpSocket = new DatagramSocket(UDPAnnouncer.UDP_PORT);
 
                     while (true) {
-                        try {
-                            byte[] buffer = new byte[BUFFER_LENGTH];
-                            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                            socket.receive(packet);
+                        byte[] buffer = new byte[BUFFER_LENGTH];
+                        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                        udpSocket.receive(packet);
 
-                            UDPAnnounce announce = UDPAnnounce.fromByteArray(packet.getData());
-                            hosts.put(announce.getMac(), new Host(announce, packet.getAddress()));
-
-                            for (Host host : hosts.values()) {
-                                System.out.println(host.getIp() + " " + host.getAnnounce().getMac());
-                            }
-                        } catch (IOException e) {
-                            System.err.println(e.getLocalizedMessage());
-                        }
+                        UDPAnnounce announce = UDPAnnounce.fromByteArray(packet.getData());
+                        sendMessages(packet.getAddress(), announce.getMac());
+                        offsets.put(announce.getMac(), System.currentTimeMillis() - announce.getCurrentTime());
                     }
-                } catch (SocketException e) {
+                } catch (IOException e) {
                     System.out.println(e.getLocalizedMessage());
+                } finally {
+                    if (udpSocket != null) {
+                        udpSocket.close();
+                    }
                 }
             }
-        }, 0, UDPAnnouncer.PERIOD);
+        }, 0, PERIOD);
     }
 
-    private void sendMessages(MacAddress mac) {
+    private void sendMessages(InetAddress ip, MacAddress mac) throws IOException {
+        for (int i = counts.containsKey(mac) ? counts.get(mac) : 0; i < myMessages.size(); i++) {
+            Socket socket = new Socket(ip, TCP_PORT);
+            OutputStream os = socket.getOutputStream();
 
+            os.write(myMessages.get(i).toByteArray());
+
+            socket.close();
+            counts.put(mac, i + 1);
+        }
+    }
+
+    public void sendMessage(String message) {
+        try {
+            myMessages.add(new TCPMessage(message));
+        } catch (IOException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
     }
 
     @Override
     public void run() {
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(TCP_PORT);
 
-    }
+            while (true) {
+                if (!offsets.isEmpty()) {
+                    Socket socket = serverSocket.accept();
+                    InputStream is = socket.getInputStream();
 
-    private class Host {
-        private final UDPAnnounce announce;
-        private final long offset;
-        private final InetAddress ip;
+                    byte[] buffer = new byte[BUFFER_LENGTH];
+                    is.read(buffer);
 
-        private Host(UDPAnnounce announce, InetAddress ip) {
-            this.announce = announce;
-            this.offset = announce.getCurrentTime() - System.currentTimeMillis();
-            this.ip = ip;
-        }
-
-        private UDPAnnounce getAnnounce() {
-            return announce;
-        }
-
-        private long getOffset() {
-            return offset;
-        }
-
-        private InetAddress getIp() {
-            return ip;
+                    TCPMessage tcpMessage = TCPMessage.fromByteArray(buffer);
+                    messages.add(new TCPMessage(tcpMessage, offsets.get(tcpMessage.getMac())));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println(e.getLocalizedMessage());
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    System.err.println(e.getLocalizedMessage());
+                }
+            }
         }
     }
 }
