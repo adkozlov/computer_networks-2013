@@ -26,8 +26,14 @@ public class TCPClient implements Runnable {
     private Map<MacAddress, Integer> counts = new HashMap<>();
     private Map<MacAddress, Long> offsets = new HashMap<>();
 
-    public SortedSet<TCPMessage> getMessages() {
-        return Collections.unmodifiableSortedSet(messages);
+    public List<String> getMessages() {
+        List<String> result = new ArrayList<>();
+
+        for (TCPMessage message : messages) {
+            result.add(message.toString());
+        }
+
+        return result;
     }
 
     private TCPClient() {

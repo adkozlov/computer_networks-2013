@@ -86,13 +86,7 @@ public class Messenger extends JFrame {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                receiveMessages();
-
-                StringBuilder sb = new StringBuilder();
-                for (TCPMessage message : messages) {
-                    sb.append(message);
-                }
-                messagesTextArea.setText(sb.toString());
+                messagesTextArea.setText(receiveMessages());
             }
         }, 0, PERIOD);
 
@@ -102,8 +96,6 @@ public class Messenger extends JFrame {
         setVisible(true);
     }
 
-    private final SortedSet<TCPMessage> messages = new TreeSet<>();
-
     private void sendMessage() {
         if (!newMessageTextField.getText().equals("")) {
             TCPClient.getInstance().sendMessage(newMessageTextField.getText());
@@ -111,7 +103,13 @@ public class Messenger extends JFrame {
         }
     }
 
-    public void receiveMessages() {
-        messages.addAll(TCPClient.getInstance().getMessages());
+    public String receiveMessages() {
+        StringBuilder sb = new StringBuilder();
+
+        for (String message : TCPClient.getInstance().getMessages()) {
+            sb.append(message);
+        }
+
+        return sb.toString();
     }
 }
