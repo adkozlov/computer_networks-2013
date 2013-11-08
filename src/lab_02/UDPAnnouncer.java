@@ -25,7 +25,7 @@ public class UDPAnnouncer implements Runnable {
     }
 
     public static final long PERIOD = 5000;
-    public static final int UDP_PORT = 1234;
+    public static final int UDP_PORT = 1235;
     public static final String BROADCAST_IP = "127.0.0.1";//"255.255.255.255";
 
     private InetAddress broadcastHost;

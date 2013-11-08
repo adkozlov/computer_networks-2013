@@ -19,7 +19,7 @@ public class TCPClient implements Runnable {
         return INSTANCE;
     }
 
-    public static final int TCP_PORT = 1235;
+    public static final int TCP_PORT = 1236;
 
     private List<TCPMessage> myMessages = new ArrayList<>();
     private SortedSet<TCPMessage> messages = new TreeSet<>();
@@ -33,7 +33,7 @@ public class TCPClient implements Runnable {
             result.add(message.toString());
         }
 
-        return result;
+        return Collections.unmodifiableList(result);
     }
 
     private TCPClient() {
@@ -71,7 +71,7 @@ public class TCPClient implements Runnable {
             Socket socket = new Socket(ip, TCP_PORT);
             OutputStream os = socket.getOutputStream();
 
-            os.write(myMessages.get(i).toByteArray());
+            os.write(new TCPMessage(myMessages.get(i), offsets.get(mac)).toByteArray());
 
             socket.close();
             counts.put(mac, i + 1);
@@ -102,8 +102,7 @@ public class TCPClient implements Runnable {
                     byte[] buffer = new byte[BUFFER_LENGTH];
                     is.read(buffer);
 
-                    TCPMessage tcpMessage = TCPMessage.fromByteArray(buffer);
-                    messages.add(new TCPMessage(tcpMessage, offsets.get(tcpMessage.getMac())));
+                    messages.add(TCPMessage.fromByteArray(buffer));
                 }
             }
         } catch (IOException e) {

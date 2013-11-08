@@ -113,6 +113,8 @@ public class TCPMessage implements IMessage, Comparable<TCPMessage> {
     public int compareTo(TCPMessage o) {
         if (timeStamp != o.timeStamp) {
             return new Long(timeStamp).compareTo(o.timeStamp);
+        } else if (!mac.equals(o.mac)) {
+            return mac.compareTo(o.mac);
         } else {
             return message.compareTo(o.message);
         }
