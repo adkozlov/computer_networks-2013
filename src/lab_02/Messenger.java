@@ -8,9 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.SortedSet;
+import java.io.IOException;
 import java.util.TimerTask;
-import java.util.TreeSet;
 
 /**
  * @author adkozlov
@@ -37,6 +36,13 @@ public class Messenger extends JFrame {
 
     private Messenger() {
         super(APPLICATION_LABEL);
+
+        try {
+            String mac = new UDPAnnounce().getMac().toString();
+            setTitle(APPLICATION_LABEL + " " + mac);
+        } catch (IOException e) {
+
+        }
 
         Container content = getContentPane();
         content.setBackground(Color.white);
@@ -96,9 +102,9 @@ public class Messenger extends JFrame {
         setVisible(true);
     }
 
-    private void sendMessage() {
+    public void sendMessage() {
         if (!newMessageTextField.getText().equals("")) {
-            TCPClient.getInstance().sendMessage(newMessageTextField.getText());
+            TCPClient.getInstance().sendMessage(newMessageTextField.getText() + " Andrew Kozlov");
             newMessageTextField.setText("");
         }
     }

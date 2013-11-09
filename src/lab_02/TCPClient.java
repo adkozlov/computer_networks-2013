@@ -12,7 +12,7 @@ import java.util.*;
 public class TCPClient implements Runnable {
 
     private static final TCPClient INSTANCE = new TCPClient();
-    private static final int BUFFER_LENGTH = 4096;
+    public static final int BUFFER_LENGTH = 4096;
     private static final long PERIOD = 500;
 
     public static TCPClient getInstance() {
@@ -29,8 +29,10 @@ public class TCPClient implements Runnable {
     public List<String> getMessages() {
         List<String> result = new ArrayList<>();
 
-        for (TCPMessage message : messages) {
-            result.add(message.toString());
+        synchronized (messages) {
+            for (TCPMessage message : messages) {
+                result.add(message.toString());
+            }
         }
 
         return Collections.unmodifiableList(result);
@@ -71,10 +73,16 @@ public class TCPClient implements Runnable {
             Socket socket = new Socket(ip, TCP_PORT);
             OutputStream os = socket.getOutputStream();
 
-            os.write(new TCPMessage(myMessages.get(i), offsets.get(mac)).toByteArray());
+            try {
+                long offset = offsets.containsKey(mac) ? offsets.get(mac) : 0;
+                os.write(new TCPMessage(myMessages.get(i), offset).toByteArray());
+                counts.put(mac, i + 1);
+            } catch (IOException e) {
+                System.err.println(e.getLocalizedMessage());
+            }
 
             socket.close();
-            counts.put(mac, i + 1);
+
         }
     }
 
@@ -102,7 +110,9 @@ public class TCPClient implements Runnable {
                     byte[] buffer = new byte[BUFFER_LENGTH];
                     is.read(buffer);
 
-                    messages.add(TCPMessage.fromByteArray(buffer));
+                    synchronized (messages) {
+                        messages.add(TCPMessage.fromByteArray(buffer));
+                    }
                 }
             }
         } catch (IOException e) {

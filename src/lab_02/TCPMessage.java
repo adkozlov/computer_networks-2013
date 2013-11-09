@@ -60,11 +60,18 @@ public class TCPMessage implements IMessage, Comparable<TCPMessage> {
             mac[i] = dis.readByte();
         }
 
-        int length = dis.read();
-        byte[] message = new byte[length];
-        dis.readFully(message);
+        int length = dis.readInt();
 
-        return new TCPMessage(timeStamp, mac, new String(message, UTF8_CHARSET));
+        if (length < 1e8) {
+            byte[] message = new byte[length];
+            for (int i = 0; i < message.length; i++) {
+                message[i] = dis.readByte();
+            }
+
+            return new TCPMessage(timeStamp, mac, new String(message, UTF8_CHARSET));
+        } else {
+            return new TCPMessage(timeStamp, mac, new String("oveflow"));
+        }
     }
 
     @Override
@@ -73,11 +80,16 @@ public class TCPMessage implements IMessage, Comparable<TCPMessage> {
         DataOutputStream dos = new DataOutputStream(baos);
 
         dos.writeLong(timeStamp);
-        dos.write(mac.getMac());
+        for (byte b : mac.getMac()) {
+            dos.write(b);
+        }
 
         byte[] bytes = message.getBytes(UTF8_CHARSET);
-        dos.write(bytes.length);
-        dos.write(bytes);
+        dos.writeInt(bytes.length);
+
+        for (byte b : bytes) {
+            dos.write(b);
+        }
 
         return baos.toByteArray();
     }

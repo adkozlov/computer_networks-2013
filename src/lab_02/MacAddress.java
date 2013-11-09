@@ -26,9 +26,7 @@ public class MacAddress implements Comparable<MacAddress> {
         }
         result += hexByte(mac[mac.length - 1]);
 
-        return result;
-
-        //return Arrays.toString(mac);
+        return result + " " + Arrays.toString(mac);
     }
 
     private static String hexByte(byte b) {
