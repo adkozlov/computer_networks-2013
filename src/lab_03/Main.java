@@ -6,6 +6,6 @@ package lab_03;
 public class Main {
 
     public static void main(String[] args) {
-        new Thread(UDPAnnouncer.getInstance()).start();
+        new Thread(UDPServer.getInstance()).start();
     }
 }

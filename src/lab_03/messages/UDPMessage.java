@@ -1,4 +1,6 @@
-package lab_03;
+package lab_03.messages;
+
+import lab_03.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,13 +9,13 @@ import java.io.IOException;
 /**
  * @author adkozlov
  */
-public class UDPAnnounce extends Message {
+public class UDPMessage extends Message {
 
-    public static Message fromByteArray(byte[] bytes) throws IOException {
+    public static UDPMessage fromByteArray(byte[] bytes) throws IOException {
         return readFromStream(createInputStream(bytes));
     }
 
-    private static UDPAnnounce readFromStream(DataInputStream dataInputStream) {
+    private static UDPMessage readFromStream(DataInputStream dataInputStream) {
         return null;
     }
 
