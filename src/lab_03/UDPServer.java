@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,33 +22,40 @@ public final class UDPServer implements Runnable {
     }
 
     private UDPServer() {
-        DatagramSocket udpSocket = null;
+        if (Thread.currentThread().isAlive()) {
+            new Timer().scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    DatagramSocket udpSocket = null;
 
-        try {
-            udpSocket = new DatagramSocket(UDP_PORT);
+                    try {
+                        udpSocket = new DatagramSocket(UDP_PORT);
 
-            while (true) {
-                byte[] buffer = new byte[BUFFER_LENGTH];
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                        while (true) {
+                            byte[] buffer = new byte[BUFFER_LENGTH];
+                            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
-                try {
-                    udpSocket.receive(packet);
-                    UDPMessage announce = UDPMessage.fromByteArray(packet.getData());
-                    // TODO insert some code here
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
+                            try {
+                                udpSocket.receive(packet);
+                                UDPMessage announce = UDPMessage.fromByteArray(packet.getData());
+                                // TODO insert some code here
+                            } catch (IOException e) {
+                                System.out.println(e.getLocalizedMessage());
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e.getLocalizedMessage());
+                    } finally {
+                        if (udpSocket != null) {
+                            udpSocket.close();
+                        }
+                    }
                 }
-            }
-        } catch (SocketException e) {
-            System.out.println(e.getLocalizedMessage());
-        } finally {
-            if (udpSocket != null) {
-                udpSocket.close();
-            }
+            }, 0, RECEIVE_PERIOD);
         }
-
     }
 
+    private static final long RECEIVE_PERIOD = 500;
     private static final long BROADCAST_PERIOD = 5000;
 
     private static final int UDP_PORT = 3012;
