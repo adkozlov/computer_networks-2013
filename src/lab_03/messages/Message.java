@@ -1,4 +1,4 @@
-package lab_03;
+package lab_03.messages;
 
 import java.io.*;
 
@@ -20,5 +20,5 @@ public abstract class Message {
         return byteArrayOutputStream.toByteArray();
     }
 
-    protected abstract void writeToStream(DataOutputStream dos);
+    public abstract void writeToStream(DataOutputStream dos) throws IOException;
 }

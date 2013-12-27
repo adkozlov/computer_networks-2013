@@ -5,7 +5,11 @@ package lab_03;
  */
 public class Main {
 
+    private static final Runnable[] SERVERS = new Runnable[]{UDPServer.getInstance()};
+
     public static void main(String[] args) {
-        new Thread(UDPServer.getInstance()).start();
+        for (Runnable server : SERVERS) {
+            new Thread(server).start();
+        }
     }
 }

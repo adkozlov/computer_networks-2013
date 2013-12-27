@@ -1,7 +1,6 @@
 package lab_03.utils;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,12 +9,20 @@ import java.util.Set;
  */
 public final class Revision {
 
-    private final BigInteger version;
+    private int version;
     private final Set<File> files;
 
     public Revision() {
-        version = BigInteger.ZERO;
+        version = 0;
         files = new HashSet<>();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public Set<File> getFiles() {
+        return files;
     }
 
     public byte[] getRevisionListHash() {
@@ -24,7 +31,7 @@ public final class Revision {
 
     public void put(File file) {
         files.add(file);
-        version.add(BigInteger.ONE);
+        version += 1;
     }
 
     public void delete(File file) {

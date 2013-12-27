@@ -1,8 +1,8 @@
 package lab_03.utils;
 
-import java.math.BigInteger;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author adkozlov
@@ -14,8 +14,20 @@ public final class RevisionManager {
         return INSTANCE;
     }
 
-    private final Map<BigInteger, Revision> revisions = new ConcurrentHashMap<>();
+    private final SortedMap<Key, Revision> revisions = new TreeMap<>();
 
     private RevisionManager() {
     }
+
+    public synchronized String makeRevisionListString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<Key, Revision> entry : revisions.entrySet()) {
+            sb.append(entry.getKey().bigIntegerValue());
+            sb.append(entry.getValue().getVersion());
+        }
+
+        return sb.toString();
+    }
+
 }

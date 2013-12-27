@@ -34,8 +34,16 @@ public final class SHA256Hasher {
         return new BigInteger(stringHash(string));
     }
 
-    public static byte[] bytesHash(File file) throws IOException {
+    private static byte[] bytesHash(File file) throws IOException {
         String content = Files.toString(file, DEFAULT_CHARSET);
         return stringHash(/* TODO revision list + */ stringHash(file.getName()) + stringHash(content)).getBytes(DEFAULT_CHARSET);
+    }
+
+    public static SHA256Hash fileHash(File file) throws IOException {
+        return new SHA256Hash(bytesHash(file));
+    }
+
+    public static SHA256Hash revisionListHash() {
+        return new SHA256Hash(RevisionManager.getInstance().makeRevisionListString().getBytes(DEFAULT_CHARSET));
     }
 }
