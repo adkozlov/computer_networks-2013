@@ -1,6 +1,8 @@
 package coursework.client.gui;
 
 import coursework.client.Client;
+import coursework.common.model.AuthenticationRequest;
+import coursework.common.model.LecturerAuthenticationRequest;
 
 import javax.swing.*;
 
@@ -16,5 +18,15 @@ public class LecturerClientFrame extends ClientFrame {
     @Override
     protected JTabbedPane createTabbedPane() {
         return new JTabbedPane();
+    }
+
+    @Override
+    protected boolean isStudentClient() {
+        return false;
+    }
+
+    @Override
+    protected AuthenticationRequest createAuthenticationRequest(String login, String password) {
+        return new LecturerAuthenticationRequest(login, password);
     }
 }

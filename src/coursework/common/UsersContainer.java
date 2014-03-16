@@ -17,9 +17,9 @@ public final class UsersContainer {
         return INSTANCE;
     }
 
-    private Map<Integer, Integer> authentication;
-    private Map<Integer, String> students;
-    private Map<Integer, String> lecturers;
+    private Map<String, Integer> authentication;
+    private Map<String, String> students;
+    private Map<String, String> lecturers;
 
     private static final String STUDENT_TYPE = "0";
     private static final String LECTURER_TYPE = "1";
@@ -31,9 +31,9 @@ public final class UsersContainer {
         try {
             scanner = new Scanner(new File(Configuration.AUTHENTICATION_DB_PATH));
 
-            Map<Integer, Integer> authentication = new ConcurrentHashMap<>();
-            Map<Integer, String> students = new ConcurrentHashMap<>();
-            Map<Integer, String> lecturers = new ConcurrentHashMap<>();
+            Map<String, Integer> authentication = new ConcurrentHashMap<>();
+            Map<String, String> students = new ConcurrentHashMap<>();
+            Map<String, String> lecturers = new ConcurrentHashMap<>();
 
             while (scanner.hasNextLine()) {
                 String[] strings = scanner.nextLine().split(SEPARATOR);
@@ -42,21 +42,21 @@ public final class UsersContainer {
                 }
 
                 String name = strings[1];
-                int loginHashCode = strings[2].hashCode();
+                String login = strings[2];
                 int passwordHashCode = strings[3].hashCode();
 
                 switch (strings[0]) {
                     case STUDENT_TYPE:
-                        students.put(loginHashCode, name);
+                        students.put(login, name);
                         break;
                     case LECTURER_TYPE:
-                        lecturers.put(loginHashCode, name);
+                        lecturers.put(login, name);
                         break;
                     default:
                         throw new DataBaseParsingException();
                 }
 
-                authentication.put(loginHashCode, passwordHashCode);
+                authentication.put(login, passwordHashCode);
             }
 
             this.authentication = Collections.unmodifiableMap(authentication);
@@ -78,41 +78,11 @@ public final class UsersContainer {
         }
     }
 
-    public boolean isAuthenticationPassed(int loginHashCode, int passwordHashCode) {
-        return authentication.containsKey(loginHashCode) ? authentication.get(loginHashCode) == passwordHashCode : false;
-    }
-
-    public boolean isAuthenticationPassed(String login, String password) {
-        return isAuthenticationPassed(login.hashCode(), password.hashCode());
-    }
-
-    public String getStudentName(int loginHashCode) {
-        return students.get(loginHashCode);
-    }
-
-    public String getStudentName(String login) {
-        return getStudentName(login.hashCode());
-    }
-
-    public String getLecturerName(int loginHashCode) {
-        return lecturers.get(loginHashCode);
-    }
-
-    public String getLecturerName(String login) {
-        return getLecturerName(login.hashCode());
-    }
-
-    public String getName(int loginHashCode) {
-        String result = getStudentName(loginHashCode);
-
-        if (result != null) {
-            return result;
-        }
-
-        return getLecturerName(loginHashCode);
+    public boolean isAuthenticationPassed(boolean isStudent, String login, int passwordHashCode) {
+        return authentication.containsKey(login) && authentication.get(login) == passwordHashCode && students.containsKey(login) == isStudent;
     }
 
     public String getName(String login) {
-        return getName(login.hashCode());
+        return students.containsKey(login) ? students.get(login) : lecturers.get(login);
     }
 }

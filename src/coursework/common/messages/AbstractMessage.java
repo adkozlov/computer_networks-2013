@@ -21,7 +21,7 @@ public abstract class AbstractMessage implements IMessage {
     }
 
     @Override
-    public abstract byte getType();
+    public abstract int getType();
 
     protected final DataInputStream dataInputStream;
 
@@ -32,7 +32,7 @@ public abstract class AbstractMessage implements IMessage {
     protected AbstractMessage(byte[] bytes) throws IOException {
         dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
 
-        byte type = dataInputStream.readByte();
+        int type = dataInputStream.readInt();
         if (type != getType()) {
             throw new MessageTypeRecognizingException(type);
         }
@@ -40,13 +40,13 @@ public abstract class AbstractMessage implements IMessage {
 
     private static class MessageTypeRecognizingException extends IOException {
 
-        public MessageTypeRecognizingException(byte b) {
-            super("There is no such type of message: " + b);
+        public MessageTypeRecognizingException(int i) {
+            super("There is no such type of message: " + i);
         }
     }
 
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeByte(getType());
+        dataOutputStream.writeInt(getType());
     }
 
     public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");

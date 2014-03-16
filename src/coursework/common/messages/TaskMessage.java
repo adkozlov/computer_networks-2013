@@ -25,7 +25,7 @@ public class TaskMessage extends AbstractMessage {
     }
 
     @Override
-    public byte getType() {
+    public int getType() {
         return 0x04;
     }
 }

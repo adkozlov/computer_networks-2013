@@ -25,7 +25,7 @@ public class SolutionResponseMessage extends AbstractMessage {
     }
 
     @Override
-    public byte getType() {
+    public int getType() {
         return 0x03;
     }
 }

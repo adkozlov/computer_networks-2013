@@ -23,6 +23,8 @@ public abstract class ServerRunnable extends AbstractRunnable {
                 Socket socket = serverSocket.accept();
 
                 readAndWrite(socket);
+
+                socket.close();
             }
         } catch (IOException e) {
             Logger.getInstance().logException(e);

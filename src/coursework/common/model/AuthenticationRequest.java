@@ -3,25 +3,28 @@ package coursework.common.model;
 /**
  * @author adkozlov
  */
-public class AuthenticationRequest {
+public abstract class AuthenticationRequest {
 
-    private final int loginHashCode, passwordHashCode;
+    private final String login;
+    private final int passwordHashCode;
 
-    public AuthenticationRequest(int loginHashCode, int passwordHashCode) {
-        this.loginHashCode = loginHashCode;
+    protected AuthenticationRequest(String login, int passwordHashCode) {
+        this.login = login;
         this.passwordHashCode = passwordHashCode;
     }
 
-    public AuthenticationRequest(String loginHashCode, String passwordHashCode) {
-        this.loginHashCode = loginHashCode.hashCode();
-        this.passwordHashCode = passwordHashCode.hashCode();
+    protected AuthenticationRequest(String login, String password) {
+        this.login = login;
+        passwordHashCode = password.hashCode();
     }
 
-    public int getLoginHashCode() {
-        return loginHashCode;
+    public String getLogin() {
+        return login;
     }
 
     public int getPasswordHashCode() {
         return passwordHashCode;
     }
+
+    public abstract boolean isStudent();
 }

@@ -23,8 +23,8 @@ public class AuthenticationServerRunnable extends ServerRunnable {
     protected void readAndWrite(Socket socket) throws IOException {
         AuthenticationRequest request = new AuthenticationRequestMessage(readBytes(socket)).getAuthenticationRequest();
 
-        AuthenticationResponse response = UsersContainer.getInstance().isAuthenticationPassed(request.getLoginHashCode(), request.getPasswordHashCode()) ?
-                new AuthenticationResponse(UsersContainer.getInstance().getName(request.getLoginHashCode())) :
+        AuthenticationResponse response = UsersContainer.getInstance().isAuthenticationPassed(request.isStudent(), request.getLogin(), request.getPasswordHashCode()) ?
+                new AuthenticationResponse(UsersContainer.getInstance().getName(request.getLogin())) :
                 new AuthenticationResponse();
 
         writeMessage(socket, new AuthenticationResponseMessage(response));

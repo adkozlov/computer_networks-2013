@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Collection;
 
 /**
  * @author adkozlov
@@ -30,13 +29,5 @@ public abstract class AbstractRunnable implements Runnable {
     protected final void writeMessage(Socket socket, IMessage message) throws IOException {
         OutputStream outputStream = socket.getOutputStream();
         outputStream.write(message.toByteArray());
-    }
-
-    protected final void writeMessages(Socket socket, Collection<IMessage> messages) throws IOException {
-        OutputStream outputStream = socket.getOutputStream();
-
-        for (IMessage message : messages) {
-            outputStream.write(message.toByteArray());
-        }
     }
 }

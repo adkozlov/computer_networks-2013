@@ -28,12 +28,15 @@ public class AuthenticationResponseMessage extends AbstractMessage {
     @Override
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
         super.writeMessage(dataOutputStream);
+
         dataOutputStream.writeBoolean(authenticationResponse.isPassed());
-        writeString(dataOutputStream, authenticationResponse.getName());
+        if (authenticationResponse.isPassed()) {
+            writeString(dataOutputStream, authenticationResponse.getName());
+        }
     }
 
     @Override
-    public byte getType() {
+    public int getType() {
         return 0x01;
     }
 }
