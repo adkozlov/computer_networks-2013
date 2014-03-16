@@ -34,6 +34,13 @@ public abstract class AbstractMessage implements IMessage {
         }
     }
 
+    private static class MessageTypeRecognizingException extends IOException {
+
+        public MessageTypeRecognizingException(byte b) {
+            super("There is no such type of message: " + b);
+        }
+    }
+
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
         dataOutputStream.writeByte(getType());
     }

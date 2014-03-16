@@ -13,7 +13,7 @@ public final class Logger {
     private Logger() {
     }
 
-    public void writeException(Exception e) {
+    public void logException(Exception e) {
         System.err.println(e.getLocalizedMessage());
     }
 }

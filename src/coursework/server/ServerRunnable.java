@@ -31,13 +31,13 @@ public abstract class ServerRunnable implements Runnable {
                 socket.close();
             }
         } catch (IOException e) {
-            Logger.getInstance().writeException(e);
+            Logger.getInstance().logException(e);
         } finally {
             if (serverSocket != null) {
                 try {
                     serverSocket.close();
                 } catch (IOException e) {
-                    Logger.getInstance().writeException(e);
+                    Logger.getInstance().logException(e);
                 }
             }
         }
