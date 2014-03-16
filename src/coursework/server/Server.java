@@ -1,10 +1,10 @@
 package coursework.server;
 
-import coursework.common.Configuration;
 import coursework.common.Utils;
-
-import java.io.IOException;
-import java.net.Socket;
+import coursework.server.runnables.AuthenticationServerRunnable;
+import coursework.server.runnables.LecturersServerRunnable;
+import coursework.server.runnables.ServerRunnable;
+import coursework.server.runnables.StudentsServerRunnable;
 
 /**
  * @author adkozlov
@@ -15,49 +15,10 @@ public class Server implements Runnable {
         Utils.startRunnable(new Server());
     }
 
-    private final ServerRunnable[] SERVERS = {new AuthenticationRunnable(), new StudentsRunnable(), new LecturersRunnable()};
+    private final ServerRunnable[] SERVERS = {new AuthenticationServerRunnable(), new StudentsServerRunnable(), new LecturersServerRunnable()};
 
     @Override
     public void run() {
-        for (Runnable runnable : SERVERS) {
-            Utils.startRunnable(runnable);
-        }
-    }
-
-
-    private class AuthenticationRunnable extends ServerRunnable {
-        @Override
-        protected int getPort() {
-            return Configuration.AUTHENTICATION_PORT;
-        }
-
-        @Override
-        protected void readAndWrite(Socket socket) throws IOException {
-
-        }
-    }
-
-    private class StudentsRunnable extends ServerRunnable {
-        @Override
-        protected int getPort() {
-            return Configuration.STUDENTS_PORT;
-        }
-
-        @Override
-        protected void readAndWrite(Socket socket) throws IOException {
-
-        }
-    }
-
-    private class LecturersRunnable extends ServerRunnable {
-        @Override
-        protected int getPort() {
-            return Configuration.LECTURERS_PORT;
-        }
-
-        @Override
-        protected void readAndWrite(Socket socket) throws IOException {
-
-        }
+        Utils.startRunnables(SERVERS);
     }
 }

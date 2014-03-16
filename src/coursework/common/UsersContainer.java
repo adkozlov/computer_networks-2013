@@ -101,4 +101,18 @@ public final class UsersContainer {
     public String getLecturerName(String login) {
         return getLecturerName(login.hashCode());
     }
+
+    public String getName(int loginHashCode) {
+        String result = getStudentName(loginHashCode);
+
+        if (result != null) {
+            return result;
+        }
+
+        return getLecturerName(loginHashCode);
+    }
+
+    public String getName(String login) {
+        return getName(login.hashCode());
+    }
 }

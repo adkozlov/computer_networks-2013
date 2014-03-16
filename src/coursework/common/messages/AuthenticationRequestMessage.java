@@ -12,6 +12,10 @@ public class AuthenticationRequestMessage extends AbstractMessage {
 
     private final AuthenticationRequest authenticationRequest;
 
+    public AuthenticationRequestMessage(AuthenticationRequest authenticationRequest) {
+        this.authenticationRequest = authenticationRequest;
+    }
+
     public AuthenticationRequestMessage(byte[] bytes) throws IOException {
         super(bytes);
         authenticationRequest = new AuthenticationRequest(dataInputStream.readInt(), dataInputStream.readInt());
@@ -27,5 +31,9 @@ public class AuthenticationRequestMessage extends AbstractMessage {
     @Override
     public byte getType() {
         return 0x00;
+    }
+
+    public AuthenticationRequest getAuthenticationRequest() {
+        return authenticationRequest;
     }
 }

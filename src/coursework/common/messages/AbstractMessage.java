@@ -25,6 +25,10 @@ public abstract class AbstractMessage implements IMessage {
 
     protected final DataInputStream dataInputStream;
 
+    protected AbstractMessage() {
+        dataInputStream = null;
+    }
+
     protected AbstractMessage(byte[] bytes) throws IOException {
         dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
 
@@ -50,20 +54,14 @@ public abstract class AbstractMessage implements IMessage {
     private static byte[] readBytes(DataInputStream dataInputStream) throws IOException {
         int length = dataInputStream.readInt();
         byte[] bytes = new byte[length];
-
-        for (int i = 0; i < length; i++) {
-            bytes[i] = dataInputStream.readByte();
-        }
+        dataInputStream.read(bytes);
 
         return bytes;
     }
 
     private static void writeBytes(DataOutputStream dataOutputStream, byte[] bytes) throws IOException {
         dataOutputStream.writeInt(bytes.length);
-
-        for (byte b : bytes) {
-            dataOutputStream.writeByte(b);
-        }
+        dataOutputStream.write(bytes);
     }
 
     protected static String readString(DataInputStream dataInputStream) throws IOException {
