@@ -24,7 +24,12 @@ public abstract class ClientFrame extends JFrame {
 
         setContentPane(createTabbedPane());
         setSize(DEFAULT_DIMENSION);
+        setLocationRelativeTo(getParent());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     protected abstract JTabbedPane createTabbedPane();

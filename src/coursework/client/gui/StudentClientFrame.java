@@ -1,6 +1,6 @@
 package coursework.client.gui;
 
-import coursework.client.Client;
+import coursework.client.StudentClient;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.StudentAuthenticationRequest;
 
@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class StudentClientFrame extends ClientFrame {
 
-    public StudentClientFrame(Client client) {
+    public StudentClientFrame(StudentClient client) {
         super(client);
     }
 
@@ -21,12 +21,17 @@ public class StudentClientFrame extends ClientFrame {
     }
 
     @Override
-    protected boolean isStudentClient() {
+    public StudentClient getClient() {
+        return (StudentClient) super.getClient();
+    }
+
+    @Override
+    protected final boolean isStudentClient() {
         return true;
     }
 
     @Override
-    protected AuthenticationRequest createAuthenticationRequest(String login, String password) {
+    protected final AuthenticationRequest createAuthenticationRequest(String login, String password) {
         return new StudentAuthenticationRequest(login, password);
     }
 }

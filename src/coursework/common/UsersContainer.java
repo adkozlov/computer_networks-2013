@@ -2,6 +2,8 @@ package coursework.common;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,9 +19,11 @@ public final class UsersContainer {
         return INSTANCE;
     }
 
-    private Map<String, Integer> authentication;
-    private Map<String, String> students;
-    private Map<String, String> lecturers;
+    private final Map<String, Integer> authentication;
+    private final Map<String, Signature> signatures;
+    private final Map<Signature, String> logins;
+    private final Map<String, String> students;
+    private final Map<String, String> lecturers;
 
     private static final String STUDENT_TYPE = "0";
     private static final String LECTURER_TYPE = "1";
@@ -27,13 +31,15 @@ public final class UsersContainer {
     private static final int FIELDS_COUNT = 4;
 
     private UsersContainer() {
+        Map<String, Integer> authentication = new ConcurrentHashMap<>();
+        Map<String, Signature> signatures = new ConcurrentHashMap<>();
+        Map<Signature, String> logins = new ConcurrentHashMap<>();
+        Map<String, String> students = new ConcurrentHashMap<>();
+        Map<String, String> lecturers = new ConcurrentHashMap<>();
+
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File(Configuration.AUTHENTICATION_DB_PATH));
-
-            Map<String, Integer> authentication = new ConcurrentHashMap<>();
-            Map<String, String> students = new ConcurrentHashMap<>();
-            Map<String, String> lecturers = new ConcurrentHashMap<>();
 
             while (scanner.hasNextLine()) {
                 String[] strings = scanner.nextLine().split(SEPARATOR);
@@ -57,17 +63,23 @@ public final class UsersContainer {
                 }
 
                 authentication.put(login, passwordHashCode);
-            }
 
-            this.authentication = Collections.unmodifiableMap(authentication);
-            this.students = Collections.unmodifiableMap(students);
-            this.lecturers = Collections.unmodifiableMap(lecturers);
+                Signature signature = createSignature(login);
+                signatures.put(login, signature);
+                logins.put(signature, login);
+            }
         } catch (IOException e) {
             Logger.getInstance().logException(e);
         } finally {
             if (scanner != null) {
                 scanner.close();
             }
+
+            this.authentication = Collections.unmodifiableMap(authentication);
+            this.signatures = Collections.unmodifiableMap(signatures);
+            this.logins = Collections.unmodifiableMap(logins);
+            this.students = Collections.unmodifiableMap(students);
+            this.lecturers = Collections.unmodifiableMap(lecturers);
         }
     }
 
@@ -79,10 +91,41 @@ public final class UsersContainer {
     }
 
     public boolean isAuthenticationPassed(boolean isStudent, String login, int passwordHashCode) {
-        return authentication.containsKey(login) && authentication.get(login) == passwordHashCode && students.containsKey(login) == isStudent;
+        return authentication.containsKey(login) && authentication.get(login) == passwordHashCode && isStudent(login) == isStudent;
+    }
+
+    public boolean isStudent(String login) {
+        return students.containsKey(login);
+    }
+
+    public boolean isLecturer(String login) {
+        return lecturers.containsKey(login);
     }
 
     public String getName(String login) {
         return students.containsKey(login) ? students.get(login) : lecturers.get(login);
+    }
+
+    public Signature getSignature(String login) {
+        return signatures.get(login);
+    }
+
+    public String getLogin(Signature signature) {
+        return logins.get(signature);
+    }
+
+    private Signature createSignature(String login) {
+        Signature result = null;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(Configuration.HASH_FUNCTION_NAME);
+            messageDigest.reset();
+
+            messageDigest.update(login.getBytes());
+            result = new Signature(messageDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            Logger.getInstance().logException(e);
+        } finally {
+            return result;
+        }
     }
 }

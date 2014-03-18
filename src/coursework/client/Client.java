@@ -1,31 +1,35 @@
 package coursework.client;
 
 import coursework.client.runnables.AuthenticationClientRunnable;
-import coursework.common.Logger;
+import coursework.common.Signature;
 import coursework.common.Utils;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
+import coursework.common.runnables.SleepableRunnable;
 
 /**
  * @author adkozlov
  */
-public abstract class Client implements Runnable {
+public abstract class Client extends SleepableRunnable {
 
-    private static final long SLEEP_PERIOD = 250;
+    private Signature signature;
+
+    public Signature getSignature() {
+        return signature;
+    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         AuthenticationClientRunnable authenticationClientRunnable = new AuthenticationClientRunnable(authenticationRequest);
 
         Utils.startRunnable(authenticationClientRunnable);
-
         while (authenticationClientRunnable.getAuthenticationResponse() == null) {
-            try {
-                Thread.sleep(SLEEP_PERIOD);
-            } catch (InterruptedException e) {
-                Logger.getInstance().logException(e);
-            }
+            sleep();
         }
 
-        return authenticationClientRunnable.getAuthenticationResponse();
+
+        AuthenticationResponse authenticationResponse = authenticationClientRunnable.getAuthenticationResponse();
+        signature = authenticationResponse.getSignature();
+
+        return authenticationResponse;
     }
 }

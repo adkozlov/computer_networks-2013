@@ -1,9 +1,9 @@
 package coursework.common.messages;
 
+import coursework.common.Configuration;
 import coursework.common.FileWrapper;
 
 import java.io.*;
-import java.nio.charset.Charset;
 
 /**
  * @author adkozlov
@@ -20,8 +20,12 @@ public abstract class AbstractMessage implements IMessage {
         return byteArrayOutputStream.toByteArray();
     }
 
+    protected static byte type;
+
     @Override
-    public abstract int getType();
+    public byte getType() {
+        return type;
+    }
 
     protected final DataInputStream dataInputStream;
 
@@ -32,7 +36,7 @@ public abstract class AbstractMessage implements IMessage {
     protected AbstractMessage(byte[] bytes) throws IOException {
         dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
 
-        int type = dataInputStream.readInt();
+        byte type = dataInputStream.readByte();
         if (type != getType()) {
             throw new MessageTypeRecognizingException(type);
         }
@@ -40,18 +44,16 @@ public abstract class AbstractMessage implements IMessage {
 
     private static class MessageTypeRecognizingException extends IOException {
 
-        public MessageTypeRecognizingException(int i) {
-            super("There is no such type of message: " + i);
+        public MessageTypeRecognizingException(byte b) {
+            super("There is no such type of message: " + b);
         }
     }
 
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
-        dataOutputStream.writeInt(getType());
+        dataOutputStream.writeByte(getType());
     }
 
-    public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
-    private static byte[] readBytes(DataInputStream dataInputStream) throws IOException {
+    protected static byte[] readBytes(DataInputStream dataInputStream) throws IOException {
         int length = dataInputStream.readInt();
         byte[] bytes = new byte[length];
         dataInputStream.read(bytes);
@@ -59,17 +61,17 @@ public abstract class AbstractMessage implements IMessage {
         return bytes;
     }
 
-    private static void writeBytes(DataOutputStream dataOutputStream, byte[] bytes) throws IOException {
+    protected static void writeBytes(DataOutputStream dataOutputStream, byte[] bytes) throws IOException {
         dataOutputStream.writeInt(bytes.length);
         dataOutputStream.write(bytes);
     }
 
     protected static String readString(DataInputStream dataInputStream) throws IOException {
-        return new String(readBytes(dataInputStream), UTF8_CHARSET);
+        return new String(readBytes(dataInputStream), Configuration.UTF8_CHARSET);
     }
 
     protected static void writeString(DataOutputStream dataOutputStream, String s) throws IOException {
-        writeBytes(dataOutputStream, s.getBytes(UTF8_CHARSET));
+        writeBytes(dataOutputStream, s.getBytes(Configuration.UTF8_CHARSET));
     }
 
     protected static FileWrapper readFile(DataInputStream dataInputStream) throws IOException {

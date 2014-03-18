@@ -9,5 +9,5 @@ public interface IMessage {
 
     public byte[] toByteArray() throws IOException;
 
-    public int getType();
+    public byte getType();
 }

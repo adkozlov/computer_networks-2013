@@ -36,9 +36,10 @@ public class AuthenticationRequestMessage extends AbstractMessage {
         dataOutputStream.writeInt(authenticationRequest.getPasswordHashCode());
     }
 
-    @Override
-    public int getType() {
-        return 0x00;
+    public static final byte TYPE = 0x01;
+
+    static {
+        type = TYPE;
     }
 
     public AuthenticationRequest getAuthenticationRequest() {

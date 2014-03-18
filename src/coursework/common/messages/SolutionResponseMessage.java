@@ -8,13 +8,18 @@ import java.io.IOException;
 /**
  * @author adkozlov
  */
-public class SolutionResponseMessage extends AbstractMessage {
+public class SolutionResponseMessage extends SignedObjectMessage {
 
     private final SolutionResponse solutionResponse;
 
     public SolutionResponseMessage(byte[] bytes) throws IOException {
         super(bytes);
-        solutionResponse = new SolutionResponse(dataInputStream.readBoolean(), readString(dataInputStream));
+        solutionResponse = new SolutionResponse(dataInputStream.readBoolean(), readString(dataInputStream), getSignature());
+    }
+
+    public SolutionResponseMessage(SolutionResponse solutionResponse) {
+        super(solutionResponse.getSignature());
+        this.solutionResponse = solutionResponse;
     }
 
     @Override
@@ -24,8 +29,9 @@ public class SolutionResponseMessage extends AbstractMessage {
         writeString(dataOutputStream, solutionResponse.getComments());
     }
 
-    @Override
-    public int getType() {
-        return 0x03;
+    public static final byte TYPE = 0x04;
+
+    static {
+        type = TYPE;
     }
 }

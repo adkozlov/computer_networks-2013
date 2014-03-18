@@ -1,5 +1,6 @@
 package coursework.common.messages;
 
+import coursework.common.Signature;
 import coursework.common.model.AuthenticationResponse;
 
 import java.io.DataOutputStream;
@@ -18,7 +19,7 @@ public class AuthenticationResponseMessage extends AbstractMessage {
 
     public AuthenticationResponseMessage(byte[] bytes) throws IOException {
         super(bytes);
-        authenticationResponse = dataInputStream.readBoolean() ? new AuthenticationResponse(readString(dataInputStream)) : new AuthenticationResponse();
+        authenticationResponse = dataInputStream.readBoolean() ? new AuthenticationResponse(readString(dataInputStream), new Signature(readBytes(dataInputStream))) : new AuthenticationResponse();
     }
 
     public AuthenticationResponse getAuthenticationResponse() {
@@ -32,11 +33,13 @@ public class AuthenticationResponseMessage extends AbstractMessage {
         dataOutputStream.writeBoolean(authenticationResponse.isPassed());
         if (authenticationResponse.isPassed()) {
             writeString(dataOutputStream, authenticationResponse.getName());
+            writeBytes(dataOutputStream, authenticationResponse.getSignature().getBytes());
         }
     }
 
-    @Override
-    public int getType() {
-        return 0x01;
+    public static final byte TYPE = 0x02;
+
+    static {
+        type = TYPE;
     }
 }
