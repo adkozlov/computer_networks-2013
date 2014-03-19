@@ -23,7 +23,7 @@ public class LecturerClientFrame extends ClientFrame {
     }
 
     @Override
-    protected JTabbedPane createTabbedPane() {
+    protected JTabbedPane createContentPane() {
         JTabbedPane result = new JTabbedPane();
 
         result.add(NEW_TASK_TITLE, createNewTaskPanel());
@@ -31,10 +31,11 @@ public class LecturerClientFrame extends ClientFrame {
         return result;
     }
 
-    private static final String NEW_TASK_TITLE = "New Task";
+    private static final String NEW_TASK_TITLE = "New task";
+
     private static final String OK_BUTTON_LABEL = "Submit";
-    private static final String NAME_PANEL_LABEL = "Name";
-    private static final String TEXT_PANEL_LABEL = "Text";
+    private static final String NAME_PANEL_LABEL = "Task name";
+    private static final String TEXT_PANEL_LABEL = "Task text";
     private static final String DEADLINE_PANEL_LABEL = "Deadline";
     private static final String DATE_FORMAT = "dd.MM.yyyy";
 
@@ -100,6 +101,10 @@ public class LecturerClientFrame extends ClientFrame {
 
     private void newTask(String name, String text, long deadline) {
         getClient().newTask(name, text, deadline);
+    }
+
+    private void newVerdict(String name, boolean accepted, String comments) {
+        getClient().newVerdict(name, accepted, comments);
     }
 
     @Override

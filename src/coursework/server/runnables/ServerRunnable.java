@@ -6,6 +6,9 @@ import coursework.common.runnables.AbstractRunnable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * @author adkozlov
@@ -36,6 +39,19 @@ public abstract class ServerRunnable extends AbstractRunnable {
                     Logger.getInstance().logException(e);
                 }
             }
+        }
+    }
+
+    protected void writeFile(Path path, byte[] bytes) {
+        try {
+            Path parent = path.getParent();
+            if (!Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+
+            Files.write(path, bytes, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            Logger.getInstance().logException(e);
         }
     }
 }

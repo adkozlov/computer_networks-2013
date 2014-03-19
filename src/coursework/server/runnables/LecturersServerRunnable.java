@@ -1,17 +1,17 @@
 package coursework.server.runnables;
 
-import coursework.common.*;
-import coursework.common.messages.SolutionRequestMessage;
+import coursework.common.Configuration;
+import coursework.common.Signature;
+import coursework.common.UsersContainer;
 import coursework.common.messages.TaskMessage;
-import coursework.common.model.SolutionRequest;
+import coursework.common.messages.VerdictMessage;
 import coursework.common.model.Task;
+import coursework.common.model.Verdict;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * @author adkozlov
@@ -30,39 +30,21 @@ public class LecturersServerRunnable extends ServerRunnable {
             case TaskMessage.TYPE:
                 writeTask(new TaskMessage(bytes).getTask());
                 break;
-            case SolutionRequestMessage.TYPE:
-                writeSolutionRequest(new SolutionRequestMessage(bytes).getSolutionRequest());
+            case VerdictMessage.TYPE:
+                writeVerdict(new VerdictMessage(bytes).getVerdict());
                 break;
         }
     }
 
-    private Path buildFilePath(String fileName, long time, Signature signature, String objectFolderName, String extension) {
-        return Paths.get(String.format(Configuration.FILE_FORMAT, Configuration.SERVER_FILES_PATH, objectFolderName, UsersContainer.getInstance().getLogin(signature), time, fileName, extension));
+    private static Path buildTaskFilePath(String name, long deadline, Signature signature) {
+        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, Configuration.SERVER_FILES_PATH, UsersContainer.getInstance().getLogin(signature), deadline, name));
     }
 
     private void writeTask(Task task) {
-        Path path = buildFilePath(task.getName(), task.getDeadline(), task.getSignature(), Configuration.TASKS_FOLDER, Configuration.TASK_EXTENSION);
-
-        writeFile(path, task.getText().getBytes(Configuration.UTF8_CHARSET));
+        writeFile(buildTaskFilePath(task.getName(), task.getDeadline(), task.getSignature()), task.getText().getBytes(Configuration.UTF8_CHARSET));
     }
 
-    private void writeSolutionRequest(SolutionRequest solutionRequest) {
-        FileWrapper fileWrapper = solutionRequest.getFileWrapper();
-        Path path = buildFilePath(fileWrapper.getFileName(), System.currentTimeMillis(), solutionRequest.getSignature(), Configuration.SOLUTIONS_FOLDER, Configuration.SOLUTION_EXTENSION);
+    private void writeVerdict(Verdict verdict) {
 
-        writeFile(path, fileWrapper.getContent());
-    }
-
-    private void writeFile(Path path, byte[] bytes) {
-        try {
-            Path parent = path.getParent();
-            if (!Files.exists(parent)) {
-                Files.createDirectories(parent);
-            }
-
-            Files.write(path, bytes, StandardOpenOption.CREATE);
-        } catch (IOException e) {
-            Logger.getInstance().logException(e);
-        }
     }
 }

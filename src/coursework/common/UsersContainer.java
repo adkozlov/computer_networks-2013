@@ -94,6 +94,10 @@ public final class UsersContainer {
         return authentication.containsKey(login) && authentication.get(login) == passwordHashCode && isStudent(login) == isStudent;
     }
 
+    public boolean isAuthenticated(Signature signature) {
+        return logins.containsKey(signature);
+    }
+
     public boolean isStudent(String login) {
         return students.containsKey(login);
     }
@@ -115,17 +119,16 @@ public final class UsersContainer {
     }
 
     private Signature createSignature(String login) {
-        Signature result = null;
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(Configuration.HASH_FUNCTION_NAME);
             messageDigest.reset();
 
             messageDigest.update(login.getBytes());
-            result = new Signature(messageDigest.digest());
+            return new Signature(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
             Logger.getInstance().logException(e);
         } finally {
-            return result;
+            return null;
         }
     }
 }

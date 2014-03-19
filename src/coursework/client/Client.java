@@ -1,6 +1,7 @@
 package coursework.client;
 
 import coursework.client.runnables.AuthenticationClientRunnable;
+import coursework.client.runnables.ClientRunnable;
 import coursework.common.Signature;
 import coursework.common.Utils;
 import coursework.common.model.AuthenticationRequest;
@@ -31,5 +32,9 @@ public abstract class Client extends SleepableRunnable {
         signature = authenticationResponse.getSignature();
 
         return authenticationResponse;
+    }
+
+    protected void startClientRunnable(ClientRunnable clientRunnable) {
+        Utils.startRunnable(clientRunnable);
     }
 }

@@ -5,15 +5,21 @@ import coursework.common.Signature;
 /**
  * @author adkozlov
  */
-public class SolutionResponse extends SignedObject {
+public class Verdict extends SignedObject {
 
+    private final String name;
     private final boolean accepted;
     private final String comments;
 
-    public SolutionResponse(boolean accepted, String comments, Signature signature) {
+    public Verdict(String name, boolean accepted, String comments, Signature signature) {
         super(signature);
+        this.name = name;
         this.accepted = accepted;
         this.comments = comments;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isAccepted() {

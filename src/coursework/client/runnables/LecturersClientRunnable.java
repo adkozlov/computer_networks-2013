@@ -2,10 +2,10 @@ package coursework.client.runnables;
 
 import coursework.common.Configuration;
 import coursework.common.messages.IMessage;
-import coursework.common.messages.SolutionResponseMessage;
 import coursework.common.messages.TaskMessage;
-import coursework.common.model.SolutionResponse;
+import coursework.common.messages.VerdictMessage;
 import coursework.common.model.Task;
+import coursework.common.model.Verdict;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,16 +16,16 @@ import java.net.Socket;
 public class LecturersClientRunnable extends ClientRunnable {
 
     private final Task task;
-    private final SolutionResponse solutionResponse;
+    private final Verdict verdict;
 
     public LecturersClientRunnable(Task task) {
         this.task = task;
-        solutionResponse = null;
+        verdict = null;
     }
 
-    public LecturersClientRunnable(SolutionResponse solutionResponse) {
+    public LecturersClientRunnable(Verdict verdict) {
         task = null;
-        this.solutionResponse = solutionResponse;
+        this.verdict = verdict;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class LecturersClientRunnable extends ClientRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        IMessage message = task != null ? new TaskMessage(task) : new SolutionResponseMessage(solutionResponse);
+        IMessage message = task != null ? new TaskMessage(task) : new VerdictMessage(verdict);
 
         writeMessage(socket, message);
     }

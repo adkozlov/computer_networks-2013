@@ -26,12 +26,16 @@ public final class Configuration {
     public static final String LECTURER_FILES_PATH = STORAGE_PATH + "lecturer" + File.separator;
 
     public static final String SOLUTIONS_FOLDER = "solutions" + File.separator;
+    public static final String VERDICTS_FOLDER = "verdicts" + File.separator;
+    public static final String VERDICT_EXTENSION = ".vrd";
     public static final String TASKS_FOLDER = "tasks" + File.separator;
-    public static final String SOLUTION_EXTENSION = "slt";
-    public static final String TASK_EXTENSION = "tsk";
+    public static final String TASK_EXTENSION = ".tsk";
 
     public static final String AUTHENTICATION_DB_PATH = SERVER_FILES_PATH + "authentication.db";
 
     public static final String FILE_DELIMITER = "_::_";
-    public static final String FILE_FORMAT = "%s%s%s" + File.separator + "%d" + FILE_DELIMITER + "%s.%s";
+
+    public static final String SOLUTION_FILE_FORMAT = "%s" + SOLUTIONS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s";
+    public static final String VERDICT_FILE_FORMAT = "%s" + VERDICTS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + VERDICT_EXTENSION;
+    public static final String TASK_FILE_FORMAT = "%s" + TASKS_FOLDER + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + TASK_EXTENSION;
 }

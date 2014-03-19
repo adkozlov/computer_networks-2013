@@ -4,6 +4,7 @@ import coursework.client.gui.LecturerClientFrame;
 import coursework.client.runnables.LecturersClientRunnable;
 import coursework.common.Utils;
 import coursework.common.model.Task;
+import coursework.common.model.Verdict;
 
 /**
  * @author adkozlov
@@ -20,8 +21,10 @@ public class LecturerClient extends Client {
     }
 
     public void newTask(String name, String text, long deadline) {
-        LecturersClientRunnable lecturersClientRunnable = new LecturersClientRunnable(new Task(name, text, deadline, getSignature()));
+        startClientRunnable(new LecturersClientRunnable(new Task(name, text, deadline, getSignature())));
+    }
 
-        Utils.startRunnable(lecturersClientRunnable);
+    public void newVerdict(String name, boolean accepted, String comments) {
+        startClientRunnable(new LecturersClientRunnable(new Verdict(name, accepted, comments, getSignature())));
     }
 }

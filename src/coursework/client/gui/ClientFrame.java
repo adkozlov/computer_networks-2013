@@ -22,17 +22,17 @@ public abstract class ClientFrame extends JFrame {
 
         new AuthenticationDialog(this, isStudentClient());
 
-        setContentPane(createTabbedPane());
+        setContentPane(createContentPane());
         setSize(DEFAULT_DIMENSION);
         setLocationRelativeTo(getParent());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public Client getClient() {
         return client;
     }
 
-    protected abstract JTabbedPane createTabbedPane();
+    protected abstract JTabbedPane createContentPane();
 
     protected abstract boolean isStudentClient();
 
