@@ -1,33 +1,31 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.messages.IMessage;
 import coursework.common.messages.SolutionMessage;
 import coursework.common.messages.TaskMessage;
 import coursework.common.messages.VerdictMessage;
+import coursework.common.model.SignedObject;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
 
 /**
  * @author adkozlov
  */
 public class LecturersClientRunnable extends ClientRunnable {
 
-    private final Task task;
-    private final Verdict verdict;
+    private final SignedObject signedObject;
 
-    public LecturersClientRunnable(Task task) {
-        this.task = task;
-        verdict = null;
+    public LecturersClientRunnable(SignedObject signedObject) {
+        this.signedObject = signedObject;
     }
 
-    public LecturersClientRunnable(Verdict verdict) {
-        task = null;
-        this.verdict = verdict;
+    public LecturersClientRunnable(InetAddress address, int port, SignedObject signedObject) {
+        super(address, port);
+        this.signedObject = signedObject;
     }
 
     @Override
@@ -37,20 +35,10 @@ public class LecturersClientRunnable extends ClientRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        if (task != null) {
-            writeMessage(socket, new TaskMessage(task));
-        } else if (verdict != null) {
-            writeMessage(socket, new VerdictMessage(verdict));
-        } else {
-            List<IMessage> solutions = readMessages(socket);
-
-            for (IMessage message : solutions) {
-                if (message instanceof SolutionMessage) {
-                    writeSolution(((SolutionMessage) message).getSolution());
-                } else {
-                    throw new IMessage.UnexpectedMessageException(message);
-                }
-            }
+        if (signedObject instanceof Task) {
+            writeMessage(socket, new TaskMessage((Task) signedObject));
+        } else if (signedObject instanceof Verdict) {
+            writeMessage(socket, new VerdictMessage((Verdict) signedObject));
         }
     }
 

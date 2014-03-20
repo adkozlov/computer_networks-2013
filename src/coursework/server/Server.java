@@ -62,23 +62,27 @@ public final class Server extends Thread {
 
     private final Map<Signature, Set<Task>> sentTasks = new ConcurrentHashMap<>();
 
-    public void sendTask(Signature student, Task task) {
-        send(student, task, sentTasks);
+    public Map<Signature, Set<Task>> getSentTasks() {
+        return sentTasks;
     }
 
     private final Map<Signature, Set<Solution>> sentSolutions = new ConcurrentHashMap<>();
 
-    public void sendSolution(Signature lecturer, Solution solution) {
-        send(lecturer, solution, sentSolutions);
+    public Map<Signature, Set<Solution>> getSentSolutions() {
+        return sentSolutions;
     }
 
     private final Map<Signature, Set<Verdict>> sentVerdicts = new ConcurrentHashMap<>();
 
-    public void sendVerdict(Signature student, Verdict verdict) {
-        send(student, verdict, sentVerdicts);
+    public Map<Signature, Set<Verdict>> getSentVerdicts() {
+        return sentVerdicts;
     }
 
-    private static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
+    public static <E extends SignedObject> boolean isSent(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
+        return sentSignedObjects.containsKey(signature) && sentSignedObjects.get(signature).contains(signedObject);
+    }
+
+    public static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
         Set<E> signedObjects = sentSignedObjects.containsKey(signedObject) ? sentSignedObjects.get(signedObject) : new HashSet<E>();
         signedObjects.add(signedObject);
 

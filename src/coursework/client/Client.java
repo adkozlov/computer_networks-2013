@@ -1,17 +1,23 @@
 package coursework.client;
 
-import coursework.client.runnables.AuthenticationClientRunnable;
-import coursework.client.runnables.LecturersAuthenticationClientRunnable;
-import coursework.client.runnables.StudentsAuthenticationClientRunnable;
+import coursework.client.runnables.*;
 import coursework.common.Logger;
 import coursework.common.Signature;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
+import coursework.server.runnables.ServerRunnable;
 
 /**
  * @author adkozlov
  */
 public abstract class Client extends Thread implements IGroupable {
+
+    private final ServerRunnable SERVER = isStudentsObject() ? new StudentServerRunnable() : new LecturerServerRunnable();
+
+    @Override
+    public void run() {
+        SERVER.start();
+    }
 
     private static final long DEFAULT_SLEEP_PERIOD = 250;
 

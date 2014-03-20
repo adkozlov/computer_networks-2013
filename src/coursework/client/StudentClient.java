@@ -16,6 +16,7 @@ public class StudentClient extends Client {
 
     @Override
     public void run() {
+        super.run();
         new StudentClientFrame(this);
     }
 

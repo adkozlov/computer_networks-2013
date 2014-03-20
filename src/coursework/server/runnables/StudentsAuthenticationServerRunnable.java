@@ -1,7 +1,12 @@
 package coursework.server.runnables;
 
+import coursework.client.runnables.LecturersClientRunnable;
 import coursework.common.Configuration;
+import coursework.common.Signature;
+import coursework.common.model.SignedObject;
 import coursework.server.Server;
+
+import java.net.InetAddress;
 
 /**
  * @author adkozlov
@@ -12,22 +17,17 @@ public class StudentsAuthenticationServerRunnable extends AuthenticationServerRu
         super(server);
     }
 
-//    @Override
-//    protected void writeAll(Socket socket, Signature signature) throws IOException {
-//        for (Map.Entry<Signature, Task> tasksEntry : getServer().getTasks().entrySet()) {
-//            Task task = new Task(tasksEntry.getValue(), signature);
-//
-//            writeMessage(socket, new TaskMessage(task));
-//            getServer().sendTask(signature, task);
-//        }
-//
-//        for (Map.Entry<Signature, Verdict> verdictsEntry : getServer().getVerdicts().entrySet()) {
-//            Verdict verdict = new Verdict(verdictsEntry.getValue(), signature);
-//
-//            writeMessage(socket, new VerdictMessage(verdict));
-//            getServer().sendVerdict(signature, verdict);
-//        }
-//    }
+    @Override
+    protected void writeAll(InetAddress address, Signature signature) {
+        Server server = getServer();
+        writeAll(address, signature, server.getTasks(), server.getSentTasks());
+        writeAll(address, signature, server.getVerdicts(), server.getSentVerdicts());
+    }
+
+    @Override
+    protected LecturersClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject) {
+        return new LecturersClientRunnable(address, Configuration.STUDENTS_SERVER_PORT, signedObject);
+    }
 
     @Override
     protected int getPort() {

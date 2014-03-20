@@ -22,6 +22,8 @@ public final class Configuration {
     public static final int LECTURERS_AUTHENTICATION_PORT = 1235;
     public static final int STUDENTS_PORT = 1236;
     public static final int LECTURERS_PORT = 1237;
+    public static final int STUDENTS_SERVER_PORT = 1238;
+    public static final int LECTURERS_SERVER_PORT = 1239;
 //    public static final int SYNCHRONIZATION_PORT = 1238;
 
     public static final int BUFFER_LENGTH = 4096;
@@ -37,7 +39,7 @@ public final class Configuration {
     public static final String TASKS_FOLDER = "tasks" + File.separator;
     public static final String TASK_EXTENSION = ".tsk";
 
-    public static final String AUTHENTICATION_DB_PATH = SERVER_FILES_PATH + "authentication.db";
+    public static final String AUTHENTICATION_DB_PATH = STORAGE_PATH + "authentication.db";
 
     public static final String FILE_DELIMITER = "_::_";
 

@@ -1,8 +1,9 @@
 package coursework.client.runnables;
 
+import coursework.common.Configuration;
+import coursework.common.Logger;
 import coursework.common.messages.AuthenticationRequestMessage;
 import coursework.common.messages.AuthenticationResponseMessage;
-import coursework.common.messages.IMessage;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 
@@ -13,6 +14,19 @@ import java.net.Socket;
  * @author adkozlov
  */
 public abstract class AuthenticationClientRunnable extends ClientRunnable {
+
+    @Override
+    public void run() {
+        while (true) {
+            super.run();
+
+            try {
+                sleep(Configuration.AUTO_UPDATE_PERIOD);
+            } catch (InterruptedException e) {
+                Logger.getInstance().logException(e);
+            }
+        }
+    }
 
     private final AuthenticationRequest authenticationRequest;
     private AuthenticationResponse authenticationResponse;
@@ -31,8 +45,6 @@ public abstract class AuthenticationClientRunnable extends ClientRunnable {
 
         authenticationResponse = readMessage(readBytes(socket)).getAuthenticationResponse();
     }
-
-    protected abstract void writeMessageFile(IMessage message) throws IOException;
 
     @Override
     protected AuthenticationResponseMessage readMessage(byte[] bytes) throws IOException {

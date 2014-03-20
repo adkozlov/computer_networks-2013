@@ -5,8 +5,8 @@ import coursework.common.messages.*;
 import coursework.common.model.Solution;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
 
 /**
  * @author adkozlov
@@ -19,6 +19,11 @@ public class StudentsClientRunnable extends ClientRunnable {
         this.solution = solution;
     }
 
+    public StudentsClientRunnable(InetAddress address, int port, Solution solution) {
+        super(address, port);
+        this.solution = solution;
+    }
+
     @Override
     protected int getPort() {
         return Configuration.STUDENTS_PORT;
@@ -28,18 +33,6 @@ public class StudentsClientRunnable extends ClientRunnable {
     protected void readAndWrite(Socket socket) throws IOException {
         if (solution != null) {
             writeMessage(socket, new SolutionMessage(solution));
-        } else {
-            List<IMessage> messages = readMessages(socket);
-
-            for (IMessage message : messages) {
-                if (message instanceof TaskMessage) {
-                    writeTask(((TaskMessage) message).getTask());
-                } else if (message instanceof VerdictMessage) {
-                    writeVerdict(((VerdictMessage) message).getVerdict());
-                } else {
-                    throw new IMessage.UnexpectedMessageException(message);
-                }
-            }
         }
     }
 

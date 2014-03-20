@@ -10,14 +10,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author adkozlov
@@ -38,27 +34,6 @@ public abstract class AbstractRunnable extends Thread {
     }
 
     protected abstract IMessage readMessage(byte[] bytes) throws IOException;
-
-    protected final List<IMessage> readMessages(Socket socket) throws IOException {
-        byte[] bytes = readBytes(socket);
-
-        List<IMessage> result = new ArrayList<>();
-
-        int from = 0;
-        while (from < bytes.length) {
-            int bytesLength = ByteBuffer.wrap(bytes, from, Configuration.INT_BYTES_LENGTH).getInt();
-            if (bytesLength == 0) {
-                break;
-            }
-
-            int totalLength = Configuration.INT_BYTES_LENGTH + bytesLength;
-
-            result.add(readMessage(Arrays.copyOfRange(bytes, from, totalLength)));
-            from += totalLength;
-        }
-
-        return result;
-    }
 
     protected final void writeMessage(Socket socket, IMessage message) throws IOException {
         OutputStream outputStream = socket.getOutputStream();
