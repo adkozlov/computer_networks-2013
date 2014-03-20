@@ -34,6 +34,16 @@ public class AuthenticationClientRunnable extends ClientRunnable {
     protected void readAndWrite(Socket socket) throws IOException {
         writeMessage(socket, new AuthenticationRequestMessage(authenticationRequest));
 
-        authenticationResponse = new AuthenticationResponseMessage(readBytes(socket)).getAuthenticationResponse();
+        authenticationResponse = readMessage(readBytes(socket)).getAuthenticationResponse();
+    }
+
+    @Override
+    protected AuthenticationResponseMessage readMessage(byte[] bytes) throws IOException {
+        return new AuthenticationResponseMessage(bytes);
+    }
+
+    @Override
+    protected String getFilePath() {
+        return null;
     }
 }

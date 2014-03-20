@@ -24,7 +24,7 @@ public class LecturerClient extends Client {
         startClientRunnable(new LecturersClientRunnable(new Task(name, text, deadline, getSignature())));
     }
 
-    public void newVerdict(String name, boolean accepted, String comments) {
-        startClientRunnable(new LecturersClientRunnable(new Verdict(name, accepted, comments, getSignature())));
+    public void newVerdict(String studentName, String taskName, boolean accepted, String comments) {
+        startClientRunnable(new LecturersClientRunnable(new Verdict(studentName, taskName, accepted, comments, getSignature())));
     }
 }

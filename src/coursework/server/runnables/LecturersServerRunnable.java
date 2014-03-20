@@ -1,22 +1,19 @@
 package coursework.server.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.Signature;
-import coursework.common.UsersContainer;
+import coursework.common.messages.AbstractMessage;
+import coursework.common.messages.IMessage;
 import coursework.common.messages.TaskMessage;
 import coursework.common.messages.VerdictMessage;
-import coursework.common.model.Task;
-import coursework.common.model.Verdict;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author adkozlov
  */
 public class LecturersServerRunnable extends ServerRunnable {
+
     @Override
     protected int getPort() {
         return Configuration.LECTURERS_PORT;
@@ -26,25 +23,25 @@ public class LecturersServerRunnable extends ServerRunnable {
     protected void readAndWrite(Socket socket) throws IOException {
         byte[] bytes = readBytes(socket);
 
-        switch (bytes[0]) {
-            case TaskMessage.TYPE:
-                writeTask(new TaskMessage(bytes).getTask());
-                break;
-            case VerdictMessage.TYPE:
-                writeVerdict(new VerdictMessage(bytes).getVerdict());
-                break;
+        IMessage message = readMessage(bytes);
+        if (message instanceof TaskMessage) {
+            writeTask(((TaskMessage) message).getTask());
+        } else if (message instanceof VerdictMessage) {
+            writeVerdict(((VerdictMessage) message).getVerdict());
         }
     }
 
-    private static Path buildTaskFilePath(String name, long deadline, Signature signature) {
-        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, Configuration.SERVER_FILES_PATH, UsersContainer.getInstance().getLogin(signature), deadline, name));
-    }
+    @Override
+    protected IMessage readMessage(byte[] bytes) throws IOException {
+        byte type = bytes[Configuration.INT_BYTES_LENGTH];
 
-    private void writeTask(Task task) {
-        writeFile(buildTaskFilePath(task.getName(), task.getDeadline(), task.getSignature()), task.getText().getBytes(Configuration.UTF8_CHARSET));
-    }
+        switch (type) {
+            case TaskMessage.TYPE:
+                return new TaskMessage(bytes);
+            case VerdictMessage.TYPE:
+                return new VerdictMessage(bytes);
+        }
 
-    private void writeVerdict(Verdict verdict) {
-
+        throw new AbstractMessage.MessageTypeRecognizingException(type);
     }
 }

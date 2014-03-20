@@ -1,7 +1,7 @@
 package coursework.common.messages;
 
-import coursework.common.Configuration;
 import coursework.common.FileWrapper;
+import coursework.common.Utils;
 
 import java.io.*;
 
@@ -50,7 +50,7 @@ public abstract class AbstractMessage implements IMessage {
         }
     }
 
-    private static class MessageTypeRecognizingException extends IOException {
+    public static class MessageTypeRecognizingException extends IOException {
 
         public MessageTypeRecognizingException(byte b) {
             super("There is no such type of message: " + b);
@@ -75,11 +75,11 @@ public abstract class AbstractMessage implements IMessage {
     }
 
     protected static String readString(DataInputStream dataInputStream) throws IOException {
-        return new String(readBytes(dataInputStream), Configuration.UTF8_CHARSET);
+        return Utils.fromBytes(readBytes(dataInputStream));
     }
 
     protected static void writeString(DataOutputStream dataOutputStream, String s) throws IOException {
-        writeBytes(dataOutputStream, s.getBytes(Configuration.UTF8_CHARSET));
+        writeBytes(dataOutputStream, Utils.getBytes(s));
     }
 
     protected static FileWrapper readFile(DataInputStream dataInputStream) throws IOException {

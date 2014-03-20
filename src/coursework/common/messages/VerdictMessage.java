@@ -14,7 +14,7 @@ public class VerdictMessage extends SignedObjectMessage {
 
     public VerdictMessage(byte[] bytes) throws IOException {
         super(bytes);
-        verdict = new Verdict(readString(dataInputStream), dataInputStream.readBoolean(), readString(dataInputStream), getSignature());
+        verdict = new Verdict(readString(dataInputStream), readString(dataInputStream), dataInputStream.readBoolean(), readString(dataInputStream), getSignature());
     }
 
     public VerdictMessage(Verdict verdict) {
@@ -25,7 +25,8 @@ public class VerdictMessage extends SignedObjectMessage {
     @Override
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
         super.writeMessage(dataOutputStream);
-        writeString(dataOutputStream, verdict.getName());
+        writeString(dataOutputStream, verdict.getStudentName());
+        writeString(dataOutputStream, verdict.getTaskName());
         dataOutputStream.writeBoolean(verdict.isAccepted());
         writeString(dataOutputStream, verdict.getComments());
     }

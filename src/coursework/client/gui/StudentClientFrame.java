@@ -67,7 +67,7 @@ public class StudentClientFrame extends ClientFrame {
         southPanel.add(cancelButton);
 
         JPanel result = new JPanel(new BorderLayout());
-        result.add(northPanel, BorderLayout.CENTER);
+        result.add(northPanel, BorderLayout.PAGE_START);
         result.add(southPanel, BorderLayout.PAGE_END);
 
         solutionButton.addActionListener(new ActionListener() {

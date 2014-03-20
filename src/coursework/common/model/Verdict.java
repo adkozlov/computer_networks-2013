@@ -7,19 +7,25 @@ import coursework.common.Signature;
  */
 public class Verdict extends SignedObject {
 
-    private final String name;
+    private final String studentName;
+    private final String taskName;
     private final boolean accepted;
     private final String comments;
 
-    public Verdict(String name, boolean accepted, String comments, Signature signature) {
+    public Verdict(String studentName, String taskName, boolean accepted, String comments, Signature signature) {
         super(signature);
-        this.name = name;
+        this.studentName = studentName;
+        this.taskName = taskName;
         this.accepted = accepted;
         this.comments = comments;
     }
 
-    public String getName() {
-        return name;
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public String getTaskName() {
+        return taskName;
     }
 
     public boolean isAccepted() {

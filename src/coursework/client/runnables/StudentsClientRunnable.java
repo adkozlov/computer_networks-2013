@@ -1,11 +1,12 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.messages.SolutionMessage;
+import coursework.common.messages.*;
 import coursework.common.model.Solution;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * @author adkozlov
@@ -25,6 +26,39 @@ public class StudentsClientRunnable extends ClientRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        writeMessage(socket, new SolutionMessage(solution));
+        if (solution != null) {
+            writeMessage(socket, new SolutionMessage(solution));
+        } else {
+            List<IMessage> messages = readMessages(socket);
+
+            for (IMessage message : messages) {
+                if (message instanceof TaskMessage) {
+                    writeTask(((TaskMessage) message).getTask());
+                } else if (message instanceof VerdictMessage) {
+                    writeVerdict(((VerdictMessage) message).getVerdict());
+                } else {
+                    throw new AbstractMessage.MessageTypeRecognizingException(message.getType());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected IMessage readMessage(byte[] bytes) throws IOException {
+        byte type = bytes[Configuration.INT_BYTES_LENGTH];
+
+        switch (type) {
+            case TaskMessage.TYPE:
+                return new TaskMessage(bytes);
+            case VerdictMessage.TYPE:
+                return new VerdictMessage(bytes);
+        }
+
+        throw new AbstractMessage.MessageTypeRecognizingException(type);
+    }
+
+    @Override
+    protected String getFilePath() {
+        return Configuration.STUDENT_FILES_PATH;
     }
 }

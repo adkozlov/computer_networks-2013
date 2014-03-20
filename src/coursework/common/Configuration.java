@@ -8,10 +8,14 @@ import java.nio.charset.Charset;
  */
 public final class Configuration {
 
-    public static final String HASH_FUNCTION_NAME = "md5";
-    public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    public static final int INT_BYTES_LENGTH = 4;
+
+    protected static final String HASH_FUNCTION_NAME = "md5";
+    protected static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
     public static final String SERVER_IP = "localhost";
+
+    protected static final String DATE_FORMAT = "dd.MM.yyyy";
 
     public static final int AUTHENTICATION_PORT = 1234;
     public static final int STUDENTS_PORT = 1235;
