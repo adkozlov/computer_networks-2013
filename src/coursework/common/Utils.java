@@ -8,16 +8,6 @@ import java.util.Date;
  */
 public final class Utils {
 
-    public static void startRunnable(Runnable runnable) {
-        new Thread(runnable).start();
-    }
-
-    public static void startRunnables(Runnable[] runnables) {
-        for (Runnable runnable : runnables) {
-            startRunnable(runnable);
-        }
-    }
-
     public static SimpleDateFormat dateFormat() {
         return new SimpleDateFormat(Configuration.DATE_FORMAT);
     }

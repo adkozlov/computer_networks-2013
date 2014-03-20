@@ -2,7 +2,6 @@ package coursework.client;
 
 import coursework.client.gui.LecturerClientFrame;
 import coursework.client.runnables.LecturersClientRunnable;
-import coursework.common.Utils;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 
@@ -12,7 +11,7 @@ import coursework.common.model.Verdict;
 public class LecturerClient extends Client {
 
     public static void main(String[] args) {
-        Utils.startRunnable(new LecturerClient());
+        new LecturerClient().start();
     }
 
     @Override
@@ -20,11 +19,16 @@ public class LecturerClient extends Client {
         new LecturerClientFrame(this);
     }
 
-    public void newTask(String name, String text, long deadline) {
-        startClientRunnable(new LecturersClientRunnable(new Task(name, text, deadline, getSignature())));
+    public void newTask(String courseName, String taskName, String text, long deadline) {
+        new LecturersClientRunnable(new Task(courseName, taskName, text, deadline, getSignature())).start();
     }
 
     public void newVerdict(String studentName, String taskName, boolean accepted, String comments) {
-        startClientRunnable(new LecturersClientRunnable(new Verdict(studentName, taskName, accepted, comments, getSignature())));
+        new LecturersClientRunnable(new Verdict(studentName, taskName, accepted, comments, getSignature())).start();
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return false;
     }
 }

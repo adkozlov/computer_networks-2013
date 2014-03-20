@@ -37,7 +37,7 @@ public class StudentsClientRunnable extends ClientRunnable {
                 } else if (message instanceof VerdictMessage) {
                     writeVerdict(((VerdictMessage) message).getVerdict());
                 } else {
-                    throw new AbstractMessage.MessageTypeRecognizingException(message.getType());
+                    throw new IMessage.UnexpectedMessageException(message);
                 }
             }
         }
@@ -60,5 +60,10 @@ public class StudentsClientRunnable extends ClientRunnable {
     @Override
     protected String getFilePath() {
         return Configuration.STUDENT_FILES_PATH;
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return true;
     }
 }

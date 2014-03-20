@@ -5,6 +5,9 @@ import coursework.common.messages.AbstractMessage;
 import coursework.common.messages.IMessage;
 import coursework.common.messages.TaskMessage;
 import coursework.common.messages.VerdictMessage;
+import coursework.common.model.Task;
+import coursework.common.model.Verdict;
+import coursework.server.Server;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,6 +16,10 @@ import java.net.Socket;
  * @author adkozlov
  */
 public class LecturersServerRunnable extends ServerRunnable {
+
+    public LecturersServerRunnable(Server server) {
+        super(server);
+    }
 
     @Override
     protected int getPort() {
@@ -25,9 +32,13 @@ public class LecturersServerRunnable extends ServerRunnable {
 
         IMessage message = readMessage(bytes);
         if (message instanceof TaskMessage) {
-            writeTask(((TaskMessage) message).getTask());
+            Task task = ((TaskMessage) message).getTask();
+            writeTask(task);
+            getServer().addTask(task);
         } else if (message instanceof VerdictMessage) {
-            writeVerdict(((VerdictMessage) message).getVerdict());
+            Verdict verdict = ((VerdictMessage) message).getVerdict();
+            writeVerdict(verdict);
+            getServer().addVerdict(verdict);
         }
     }
 
@@ -43,5 +54,10 @@ public class LecturersServerRunnable extends ServerRunnable {
         }
 
         throw new AbstractMessage.MessageTypeRecognizingException(type);
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return false;
     }
 }

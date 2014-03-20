@@ -196,8 +196,8 @@ public class LecturerClientFrame extends ClientFrame {
         return (LecturerClient) super.getClient();
     }
 
-    private void newTask(String name, String text, long deadline) {
-        getClient().newTask(name, text, deadline);
+    private void newTask(String taskName, String text, long deadline) {
+        getClient().newTask(getLogin(), taskName, text, deadline);
     }
 
     private void newVerdict(String studentName, String taskName, boolean accepted, String comments) {
@@ -205,12 +205,12 @@ public class LecturerClientFrame extends ClientFrame {
     }
 
     @Override
-    protected final boolean isStudentClient() {
-        return false;
+    protected final AuthenticationRequest createAuthenticationRequest(String login, String password) {
+        return new LecturerAuthenticationRequest(login, password);
     }
 
     @Override
-    protected final AuthenticationRequest createAuthenticationRequest(String login, String password) {
-        return new LecturerAuthenticationRequest(login, password);
+    public boolean isStudentsObject() {
+        return false;
     }
 }

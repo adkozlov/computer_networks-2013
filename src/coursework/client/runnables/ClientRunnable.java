@@ -1,5 +1,6 @@
 package coursework.client.runnables;
 
+import coursework.client.IGroupable;
 import coursework.common.Configuration;
 import coursework.common.Logger;
 import coursework.common.runnables.AbstractRunnable;
@@ -10,7 +11,7 @@ import java.net.Socket;
 /**
  * @author adkozlov
  */
-public abstract class ClientRunnable extends AbstractRunnable {
+public abstract class ClientRunnable extends AbstractRunnable implements IGroupable {
 
     @Override
     public void run() {

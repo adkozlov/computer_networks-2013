@@ -1,6 +1,7 @@
 package coursework.client.gui;
 
 import coursework.client.Client;
+import coursework.client.IGroupable;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 
@@ -10,7 +11,7 @@ import java.awt.*;
 /**
  * @author adkozlov
  */
-public abstract class ClientFrame extends JFrame {
+public abstract class ClientFrame extends JFrame implements IGroupable {
 
     private static final Dimension DEFAULT_DIMENSION = new Dimension(400, 300);
 
@@ -20,7 +21,7 @@ public abstract class ClientFrame extends JFrame {
         super("");
         this.client = client;
 
-        new AuthenticationDialog(this, isStudentClient());
+        new AuthenticationDialog(this, isStudentsObject());
 
         setContentPane(createContentPane());
         setSize(DEFAULT_DIMENSION);
@@ -34,9 +35,9 @@ public abstract class ClientFrame extends JFrame {
 
     protected abstract JTabbedPane createContentPane();
 
-    protected abstract boolean isStudentClient();
-
     protected abstract AuthenticationRequest createAuthenticationRequest(String login, String password);
+
+    private String login;
 
     protected boolean authenticate(String login, String password) {
         AuthenticationResponse authenticationResponse = client.authenticate(createAuthenticationRequest(login, password));
@@ -44,8 +45,13 @@ public abstract class ClientFrame extends JFrame {
 
         if (result) {
             setTitle(authenticationResponse.getName());
+            this.login = login;
         }
 
         return result;
+    }
+
+    protected String getLogin() {
+        return login;
     }
 }

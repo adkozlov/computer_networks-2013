@@ -1,24 +1,87 @@
 package coursework.server;
 
-import coursework.common.Utils;
-import coursework.server.runnables.AuthenticationServerRunnable;
-import coursework.server.runnables.LecturersServerRunnable;
-import coursework.server.runnables.ServerRunnable;
-import coursework.server.runnables.StudentsServerRunnable;
+import coursework.common.Signature;
+import coursework.common.model.SignedObject;
+import coursework.common.model.Solution;
+import coursework.common.model.Task;
+import coursework.common.model.Verdict;
+import coursework.server.runnables.*;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author adkozlov
  */
-public class Server implements Runnable {
+public final class Server extends Thread {
 
     public static void main(String[] args) {
-        Utils.startRunnable(new Server());
+        new Server().start();
     }
 
-    private final ServerRunnable[] SERVERS = {new AuthenticationServerRunnable(), new StudentsServerRunnable(), new LecturersServerRunnable()};
+    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this)};
 
     @Override
     public void run() {
-        Utils.startRunnables(SERVERS);
+        for (ServerRunnable serverRunnable : SERVERS) {
+            serverRunnable.start();
+        }
+    }
+
+    private final Map<Signature, Task> tasks = new ConcurrentHashMap<>();
+
+    public void addTask(Task task) {
+        tasks.put(task.getSignature(), task);
+    }
+
+    public Map<Signature, Task> getTasks() {
+        return tasks;
+    }
+
+    private final Map<Signature, Solution> solutions = new ConcurrentHashMap<>();
+
+    public void addSolution(Solution solution) {
+        solutions.put(solution.getSignature(), solution);
+    }
+
+    public Map<Signature, Solution> getSolutions() {
+        return solutions;
+    }
+
+    private final Map<Signature, Verdict> verdicts = new ConcurrentHashMap<>();
+
+    public void addVerdict(Verdict verdict) {
+        verdicts.put(verdict.getSignature(), verdict);
+    }
+
+    public Map<Signature, Verdict> getVerdicts() {
+        return verdicts;
+    }
+
+    private final Map<Signature, Set<Task>> sentTasks = new ConcurrentHashMap<>();
+
+    public void sendTask(Signature student, Task task) {
+        send(student, task, sentTasks);
+    }
+
+    private final Map<Signature, Set<Solution>> sentSolutions = new ConcurrentHashMap<>();
+
+    public void sendSolution(Signature lecturer, Solution solution) {
+        send(lecturer, solution, sentSolutions);
+    }
+
+    private final Map<Signature, Set<Verdict>> sentVerdicts = new ConcurrentHashMap<>();
+
+    public void sendVerdict(Signature student, Verdict verdict) {
+        send(student, verdict, sentVerdicts);
+    }
+
+    private static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
+        Set<E> signedObjects = sentSignedObjects.containsKey(signedObject) ? sentSignedObjects.get(signedObject) : new HashSet<E>();
+        signedObjects.add(signedObject);
+
+        sentSignedObjects.put(signature, signedObjects);
     }
 }

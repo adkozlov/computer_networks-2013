@@ -2,6 +2,8 @@ package coursework.server.runnables;
 
 import coursework.common.Configuration;
 import coursework.common.messages.SolutionMessage;
+import coursework.common.model.Solution;
+import coursework.server.Server;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -11,6 +13,10 @@ import java.net.Socket;
  */
 public class StudentsServerRunnable extends ServerRunnable {
 
+    public StudentsServerRunnable(Server server) {
+        super(server);
+    }
+
     @Override
     protected int getPort() {
         return Configuration.STUDENTS_PORT;
@@ -18,11 +24,18 @@ public class StudentsServerRunnable extends ServerRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        writeSolution(readMessage(readBytes(socket)).getSolution());
+        Solution solution = readMessage(readBytes(socket)).getSolution();
+        writeSolution(solution);
+        getServer().addSolution(solution);
     }
 
     @Override
     protected SolutionMessage readMessage(byte[] bytes) throws IOException {
         return new SolutionMessage(bytes);
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return true;
     }
 }

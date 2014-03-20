@@ -3,7 +3,6 @@ package coursework.client;
 import coursework.client.gui.StudentClientFrame;
 import coursework.client.runnables.StudentsClientRunnable;
 import coursework.common.FileWrapper;
-import coursework.common.Utils;
 import coursework.common.model.Solution;
 
 /**
@@ -12,7 +11,7 @@ import coursework.common.model.Solution;
 public class StudentClient extends Client {
 
     public static void main(String[] args) {
-        Utils.startRunnable(new StudentClient());
+        new StudentClient().start();
     }
 
     @Override
@@ -21,6 +20,11 @@ public class StudentClient extends Client {
     }
 
     public void newSolution(String courseName, String name, FileWrapper solution) {
-        startClientRunnable(new StudentsClientRunnable(new Solution(courseName, name, solution, getSignature())));
+        new StudentsClientRunnable(new Solution(courseName, name, solution, getSignature())).start();
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return true;
     }
 }

@@ -14,7 +14,7 @@ public class TaskMessage extends SignedObjectMessage {
 
     public TaskMessage(byte[] bytes) throws IOException {
         super(bytes);
-        task = new Task(readString(dataInputStream), readString(dataInputStream), dataInputStream.readLong(), getSignature());
+        task = new Task(readString(dataInputStream), readString(dataInputStream), readString(dataInputStream), dataInputStream.readLong(), getSignature());
     }
 
     public TaskMessage(Task task) {
@@ -25,7 +25,8 @@ public class TaskMessage extends SignedObjectMessage {
     @Override
     protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
         super.writeMessage(dataOutputStream);
-        writeString(dataOutputStream, task.getName());
+        writeString(dataOutputStream, task.getCourseName());
+        writeString(dataOutputStream, task.getTaskName());
         writeString(dataOutputStream, task.getText());
         dataOutputStream.writeLong(task.getDeadline());
     }

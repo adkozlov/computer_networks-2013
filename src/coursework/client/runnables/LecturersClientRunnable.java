@@ -1,7 +1,10 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.messages.*;
+import coursework.common.messages.IMessage;
+import coursework.common.messages.SolutionMessage;
+import coursework.common.messages.TaskMessage;
+import coursework.common.messages.VerdictMessage;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 
@@ -45,7 +48,7 @@ public class LecturersClientRunnable extends ClientRunnable {
                 if (message instanceof SolutionMessage) {
                     writeSolution(((SolutionMessage) message).getSolution());
                 } else {
-                    throw new AbstractMessage.MessageTypeRecognizingException(message.getType());
+                    throw new IMessage.UnexpectedMessageException(message);
                 }
             }
         }
@@ -59,5 +62,10 @@ public class LecturersClientRunnable extends ClientRunnable {
     @Override
     protected String getFilePath() {
         return Configuration.LECTURER_FILES_PATH;
+    }
+
+    @Override
+    public boolean isStudentsObject() {
+        return false;
     }
 }

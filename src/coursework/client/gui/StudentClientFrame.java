@@ -1,5 +1,6 @@
 package coursework.client.gui;
 
+import coursework.client.IGroupable;
 import coursework.client.StudentClient;
 import coursework.common.FileWrapper;
 import coursework.common.model.AuthenticationRequest;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  * @author adkozlov
  */
-public class StudentClientFrame extends ClientFrame {
+public class StudentClientFrame extends ClientFrame implements IGroupable {
 
     public StudentClientFrame(StudentClient client) {
         super(client);
@@ -127,12 +128,12 @@ public class StudentClientFrame extends ClientFrame {
     }
 
     @Override
-    protected final boolean isStudentClient() {
-        return true;
+    protected final AuthenticationRequest createAuthenticationRequest(String login, String password) {
+        return new StudentAuthenticationRequest(login, password);
     }
 
     @Override
-    protected final AuthenticationRequest createAuthenticationRequest(String login, String password) {
-        return new StudentAuthenticationRequest(login, password);
+    public boolean isStudentsObject() {
+        return true;
     }
 }

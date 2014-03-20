@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author adkozlov
  */
-public abstract class AbstractRunnable implements Runnable {
+public abstract class AbstractRunnable extends Thread {
 
     protected abstract int getPort();
 
@@ -46,11 +46,15 @@ public abstract class AbstractRunnable implements Runnable {
 
         int from = 0;
         while (from < bytes.length) {
-            int length = ByteBuffer.wrap(bytes, from, Configuration.INT_BYTES_LENGTH).getInt();
+            int bytesLength = ByteBuffer.wrap(bytes, from, Configuration.INT_BYTES_LENGTH).getInt();
+            if (bytesLength == 0) {
+                break;
+            }
 
-            result.add(readMessage(Arrays.copyOfRange(bytes, from, length)));
+            int totalLength = Configuration.INT_BYTES_LENGTH + bytesLength;
 
-            from += length;
+            result.add(readMessage(Arrays.copyOfRange(bytes, from, totalLength)));
+            from += totalLength;
         }
 
         return result;
@@ -81,7 +85,7 @@ public abstract class AbstractRunnable implements Runnable {
     }
 
     protected void writeTask(Task task) {
-        writeFile(buildTaskFilePath(task.getName(), task.getDeadline(), task.getSignature()), Utils.getBytes(task.getText()));
+        writeFile(buildTaskFilePath(task.getTaskName(), task.getDeadline(), task.getSignature()), Utils.getBytes(task.getText()));
     }
 
     protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {

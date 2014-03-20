@@ -16,11 +16,13 @@ public final class Configuration {
     public static final String SERVER_IP = "localhost";
 
     protected static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final long AUTO_UPDATE_PERIOD = 60000 / 10;
 
-    public static final int AUTHENTICATION_PORT = 1234;
-    public static final int STUDENTS_PORT = 1235;
-    public static final int LECTURERS_PORT = 1236;
-//    public static final int SYNCHRONIZATION_PORT = 1237;
+    public static final int STUDENTS_AUTHENTICATION_PORT = 1234;
+    public static final int LECTURERS_AUTHENTICATION_PORT = 1235;
+    public static final int STUDENTS_PORT = 1236;
+    public static final int LECTURERS_PORT = 1237;
+//    public static final int SYNCHRONIZATION_PORT = 1238;
 
     public static final int BUFFER_LENGTH = 4096;
 
