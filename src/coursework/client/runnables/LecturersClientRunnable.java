@@ -1,7 +1,6 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.messages.IMessage;
 import coursework.common.messages.TaskMessage;
 import coursework.common.messages.VerdictMessage;
 import coursework.common.model.Task;
@@ -28,6 +27,11 @@ public class LecturersClientRunnable extends ClientRunnable {
         this.verdict = verdict;
     }
 
+    public LecturersClientRunnable() {
+        task = null;
+        verdict = null;
+    }
+
     @Override
     protected int getPort() {
         return Configuration.LECTURERS_PORT;
@@ -35,8 +39,12 @@ public class LecturersClientRunnable extends ClientRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        IMessage message = task != null ? new TaskMessage(task) : new VerdictMessage(verdict);
+        if (task != null) {
+            writeMessage(socket, new TaskMessage(task));
+        } else if (verdict != null) {
+            writeMessage(socket, new VerdictMessage(verdict));
+        } else {
 
-        writeMessage(socket, message);
+        }
     }
 }

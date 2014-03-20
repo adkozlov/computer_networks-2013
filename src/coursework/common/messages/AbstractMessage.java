@@ -17,7 +17,13 @@ public abstract class AbstractMessage implements IMessage {
 
         writeMessage(dataOutputStream);
 
-        return byteArrayOutputStream.toByteArray();
+        ByteArrayOutputStream resultByteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream resultDataOutputStream = new DataOutputStream(resultByteArrayOutputStream);
+
+        resultDataOutputStream.writeInt(byteArrayOutputStream.size());
+        resultDataOutputStream.write(byteArrayOutputStream.toByteArray());
+
+        return resultByteArrayOutputStream.toByteArray();
     }
 
     protected static byte type;
@@ -35,6 +41,8 @@ public abstract class AbstractMessage implements IMessage {
 
     protected AbstractMessage(byte[] bytes) throws IOException {
         dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
+
+        dataInputStream.readInt();
 
         byte type = dataInputStream.readByte();
         if (type != getType()) {

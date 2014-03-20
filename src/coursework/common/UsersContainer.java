@@ -127,8 +127,8 @@ public final class UsersContainer {
             return new Signature(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
             Logger.getInstance().logException(e);
-        } finally {
-            return null;
         }
+
+        return null;
     }
 }

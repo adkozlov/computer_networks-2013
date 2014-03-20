@@ -27,7 +27,6 @@ public abstract class Client extends SleepableRunnable {
             sleep();
         }
 
-
         AuthenticationResponse authenticationResponse = authenticationClientRunnable.getAuthenticationResponse();
         signature = authenticationResponse.getSignature();
 
