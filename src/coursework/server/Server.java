@@ -1,8 +1,6 @@
 package coursework.server;
 
-import coursework.common.Configuration;
-import coursework.common.Signature;
-import coursework.common.UsersContainer;
+import coursework.common.*;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.common.model.Task;
@@ -18,12 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author adkozlov
  */
-public final class Server extends Thread {
+public final class Server extends Thread implements ICleanable {
 
     private final InetAddress anotherServerAddress;
 
     public Server(InetAddress anotherServerAddress) {
         this.anotherServerAddress = anotherServerAddress;
+
+        Utils.cleanDirectory(getStoragePath());
     }
 
     public InetAddress getAnotherServerAddress() {
@@ -113,5 +113,10 @@ public final class Server extends Thread {
 
     public static Signature getServerSignature() {
         return UsersContainer.getInstance().getSignature(Configuration.SERVER_NAME);
+    }
+
+    @Override
+    public String getStoragePath() {
+        return Configuration.SERVER_FILES_PATH;
     }
 }

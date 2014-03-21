@@ -2,6 +2,7 @@ package coursework.client;
 
 import coursework.client.gui.LecturerClientFrame;
 import coursework.client.runnables.LecturersClientRunnable;
+import coursework.common.Configuration;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 
@@ -33,5 +34,10 @@ public class LecturerClient extends Client {
     @Override
     public boolean isStudentsObject() {
         return false;
+    }
+
+    @Override
+    public String getStoragePath() {
+        return Configuration.LECTURER_FILES_PATH;
     }
 }

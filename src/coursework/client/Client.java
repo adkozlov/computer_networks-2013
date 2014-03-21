@@ -1,8 +1,10 @@
 package coursework.client;
 
 import coursework.client.runnables.*;
+import coursework.common.ICleanable;
 import coursework.common.Logger;
 import coursework.common.Signature;
+import coursework.common.Utils;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 import coursework.server.runnables.ServerRunnable;
@@ -12,12 +14,14 @@ import java.net.InetAddress;
 /**
  * @author adkozlov
  */
-public abstract class Client extends Thread implements IGroupable {
+public abstract class Client extends Thread implements IGroupable, ICleanable {
 
     private final InetAddress serverAddress;
 
     protected Client(InetAddress serverAddress) {
         this.serverAddress = serverAddress;
+
+        Utils.cleanDirectory(getStoragePath());
     }
 
     public InetAddress getServerAddress() {

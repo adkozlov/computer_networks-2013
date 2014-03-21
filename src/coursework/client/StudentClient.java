@@ -2,6 +2,7 @@ package coursework.client;
 
 import coursework.client.gui.StudentClientFrame;
 import coursework.client.runnables.StudentsClientRunnable;
+import coursework.common.Configuration;
 import coursework.common.FileWrapper;
 import coursework.common.model.Solution;
 
@@ -29,5 +30,10 @@ public class StudentClient extends Client {
     @Override
     public boolean isStudentsObject() {
         return true;
+    }
+
+    @Override
+    public String getStoragePath() {
+        return Configuration.STUDENT_FILES_PATH;
     }
 }

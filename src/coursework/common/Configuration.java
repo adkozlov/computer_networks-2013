@@ -40,7 +40,7 @@ public final class Configuration {
     public static final String TASKS_FOLDER = "tasks" + File.separator;
     public static final String TASK_EXTENSION = ".tsk";
 
-    public static final String AUTHENTICATION_DB_PATH = STORAGE_PATH + "authentication.db";
+    public static final String AUTHENTICATION_DB_PATH = "database" + File.separator + "authentication.db";
 
     public static final String FILE_DELIMITER = "__";
 
