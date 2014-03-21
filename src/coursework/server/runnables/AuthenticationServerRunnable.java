@@ -62,6 +62,21 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
         }
     }
 
+    protected void writeTasks(InetAddress address, Signature signature) {
+        Server server = getServer();
+        writeAll(address, signature, server.getTasks(), server.getSentTasks());
+    }
+
+    protected void writeSolution(InetAddress address, Signature signature) {
+        Server server = getServer();
+        writeAll(address, signature, server.getSolutions(), server.getSentSolutions());
+    }
+
+    protected void writeVerdicts(InetAddress address, Signature signature) {
+        Server server = getServer();
+        writeAll(address, signature, server.getVerdicts(), server.getSentVerdicts());
+    }
+
     protected abstract ClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject);
 
     @Override

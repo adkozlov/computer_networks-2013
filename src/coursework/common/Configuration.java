@@ -8,12 +8,15 @@ import java.nio.charset.Charset;
  */
 public final class Configuration {
 
+    public static final int SERVERS_COUNT = 2;
+    public static final String SERVER_NAME_FORMAT = "server%d";
+
     public static final int INT_BYTES_LENGTH = 4;
 
     protected static final String HASH_FUNCTION_NAME = "md5";
     protected static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-    public static final String SERVER_IP = "localhost";
+    //public static final String SERVER_IP = "localhost";
 
     protected static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final long AUTO_UPDATE_PERIOD = 60000 / 10;
@@ -24,12 +27,12 @@ public final class Configuration {
     public static final int LECTURERS_PORT = 1237;
     public static final int STUDENTS_SERVER_PORT = 1238;
     public static final int LECTURERS_SERVER_PORT = 1239;
-//    public static final int SYNCHRONIZATION_PORT = 1238;
+    public static final int SYNCHRONIZATION_PORT = 1240;
 
     public static final int BUFFER_LENGTH = 4096;
 
     public static final String STORAGE_PATH = "storage" + File.separator;
-    public static final String SERVER_FILES_PATH = STORAGE_PATH + "server" + File.separator;
+    public static final String SERVER_FILES_PATH = STORAGE_PATH + SERVER_NAME_FORMAT + File.separator;
     public static final String STUDENT_FILES_PATH = STORAGE_PATH + "student" + File.separator;
     public static final String LECTURER_FILES_PATH = STORAGE_PATH + "lecturer" + File.separator;
 

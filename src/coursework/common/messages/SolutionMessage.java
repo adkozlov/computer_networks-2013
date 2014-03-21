@@ -22,12 +22,16 @@ public class SolutionMessage extends SignedObjectMessage {
         this.solution = solution;
     }
 
-    @Override
-    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
-        super.writeMessage(dataOutputStream);
+    protected static void writeSolution(DataOutputStream dataOutputStream, Solution solution) throws IOException {
         writeString(dataOutputStream, solution.getCourseName());
         writeString(dataOutputStream, solution.getTaskName());
         writeFileWrapper(dataOutputStream, solution.getFileWrapper());
+    }
+
+    @Override
+    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
+        super.writeMessage(dataOutputStream);
+        writeSolution(dataOutputStream, solution);
     }
 
     public static final byte TYPE = 0x03;

@@ -3,13 +3,15 @@ package coursework.client.runnables;
 import coursework.common.Configuration;
 import coursework.common.model.AuthenticationRequest;
 
+import java.net.InetAddress;
+
 /**
  * @author adkozlov
  */
 public class LecturersAuthenticationClientRunnable extends AuthenticationClientRunnable {
 
-    public LecturersAuthenticationClientRunnable(AuthenticationRequest authenticationRequest) {
-        super(authenticationRequest);
+    public LecturersAuthenticationClientRunnable(InetAddress address, AuthenticationRequest authenticationRequest) {
+        super(address, authenticationRequest);
     }
 
     @Override

@@ -19,9 +19,8 @@ public class StudentsAuthenticationServerRunnable extends AuthenticationServerRu
 
     @Override
     protected void writeAll(InetAddress address, Signature signature) {
-        Server server = getServer();
-        writeAll(address, signature, server.getTasks(), server.getSentTasks());
-        writeAll(address, signature, server.getVerdicts(), server.getSentVerdicts());
+        writeTasks(address, signature);
+        writeVerdicts(address, signature);
     }
 
     @Override

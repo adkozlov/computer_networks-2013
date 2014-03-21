@@ -20,8 +20,7 @@ public class LecturersAuthenticationServerRunnable extends AuthenticationServerR
 
     @Override
     protected void writeAll(InetAddress address, Signature signature) {
-        Server server = getServer();
-        writeAll(address, signature, server.getSolutions(), server.getSentSolutions());
+        writeSolution(address, signature);
     }
 
     @Override

@@ -17,11 +17,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class Server extends Thread {
 
-    public static void main(String[] args) {
-        new Server().start();
+    private final int serverId;
+
+    public Server(int serverId) {
+        this.serverId = serverId;
     }
 
-    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this)};
+    public int getServerId() {
+        return serverId;
+    }
+
+    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this), new SynchronizationServerRunnable(this), new SynchronizationAuthenticationServerRunnable(this)};
 
     @Override
     public void run() {

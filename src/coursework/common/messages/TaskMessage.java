@@ -22,13 +22,17 @@ public class TaskMessage extends SignedObjectMessage {
         this.task = task;
     }
 
-    @Override
-    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
-        super.writeMessage(dataOutputStream);
+    protected static void writeTask(DataOutputStream dataOutputStream, Task task) throws IOException {
         writeString(dataOutputStream, task.getCourseName());
         writeString(dataOutputStream, task.getTaskName());
         writeString(dataOutputStream, task.getText());
         dataOutputStream.writeLong(task.getDeadline());
+    }
+
+    @Override
+    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
+        super.writeMessage(dataOutputStream);
+        writeTask(dataOutputStream, task);
     }
 
     public static final byte TYPE = 0x05;

@@ -5,13 +5,15 @@ import coursework.client.runnables.StudentsClientRunnable;
 import coursework.common.FileWrapper;
 import coursework.common.model.Solution;
 
+import java.net.InetAddress;
+
 /**
  * @author adkozlov
  */
 public class StudentClient extends Client {
 
-    public static void main(String[] args) {
-        new StudentClient().start();
+    public StudentClient(InetAddress serverAddress) {
+        super(serverAddress);
     }
 
     @Override
@@ -21,7 +23,7 @@ public class StudentClient extends Client {
     }
 
     public void newSolution(String courseName, String name, FileWrapper solution) {
-        new StudentsClientRunnable(new Solution(courseName, name, solution, getSignature())).start();
+        new StudentsClientRunnable(getServerAddress(), new Solution(courseName, name, solution, getSignature())).start();
     }
 
     @Override

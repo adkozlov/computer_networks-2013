@@ -22,13 +22,17 @@ public class VerdictMessage extends SignedObjectMessage {
         this.verdict = verdict;
     }
 
-    @Override
-    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
-        super.writeMessage(dataOutputStream);
+    protected static void writeVerdict(DataOutputStream dataOutputStream, Verdict verdict) throws IOException {
         writeString(dataOutputStream, verdict.getStudentName());
         writeString(dataOutputStream, verdict.getTaskName());
         dataOutputStream.writeBoolean(verdict.isAccepted());
         writeString(dataOutputStream, verdict.getComments());
+    }
+
+    @Override
+    protected void writeMessage(DataOutputStream dataOutputStream) throws IOException {
+        super.writeMessage(dataOutputStream);
+        writeVerdict(dataOutputStream, verdict);
     }
 
     public static final byte TYPE = 0x04;

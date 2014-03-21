@@ -15,7 +15,8 @@ public class StudentsClientRunnable extends ClientRunnable {
 
     private final Solution solution;
 
-    public StudentsClientRunnable(Solution solution) {
+    public StudentsClientRunnable(InetAddress address, Solution solution) {
+        super(address);
         this.solution = solution;
     }
 

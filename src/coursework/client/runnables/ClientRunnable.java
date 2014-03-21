@@ -1,7 +1,6 @@
 package coursework.client.runnables;
 
 import coursework.client.IGroupable;
-import coursework.common.Configuration;
 import coursework.common.Logger;
 import coursework.common.runnables.AbstractRunnable;
 
@@ -22,8 +21,8 @@ public abstract class ClientRunnable extends AbstractRunnable implements IGroupa
         this.port = port;
     }
 
-    protected ClientRunnable() {
-        address = null;
+    protected ClientRunnable(InetAddress address) {
+        this.address = address;
         port = 0;
     }
 
@@ -32,11 +31,7 @@ public abstract class ClientRunnable extends AbstractRunnable implements IGroupa
         Socket socket = null;
 
         try {
-            if (address == null) {
-                socket = new Socket(Configuration.SERVER_IP, getPort());
-            } else {
-                socket = new Socket(address, port);
-            }
+            socket = new Socket(address, port == 0 ? getPort() : port);
 
             readAndWrite(socket);
         } catch (IOException e) {

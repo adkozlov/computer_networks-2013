@@ -19,7 +19,8 @@ public class LecturersClientRunnable extends ClientRunnable {
 
     private final SignedObject signedObject;
 
-    public LecturersClientRunnable(SignedObject signedObject) {
+    public LecturersClientRunnable(InetAddress address, SignedObject signedObject) {
+        super(address);
         this.signedObject = signedObject;
     }
 

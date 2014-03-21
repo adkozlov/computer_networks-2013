@@ -64,9 +64,7 @@ public final class UsersContainer {
 
                 authentication.put(login, passwordHashCode);
 
-                Signature signature = createSignature(login);
-                signatures.put(login, signature);
-                logins.put(signature, login);
+                add(login, signatures, logins);
             }
         } catch (IOException e) {
             Logger.getInstance().logException(e);
@@ -75,12 +73,22 @@ public final class UsersContainer {
                 scanner.close();
             }
 
+            for (int i = 0; i < Configuration.SERVERS_COUNT; i++) {
+                add(String.format(Configuration.SERVER_NAME_FORMAT, i), signatures, logins);
+            }
+
             this.authentication = Collections.unmodifiableMap(authentication);
             this.signatures = Collections.unmodifiableMap(signatures);
             this.logins = Collections.unmodifiableMap(logins);
             this.students = Collections.unmodifiableMap(students);
             this.lecturers = Collections.unmodifiableMap(lecturers);
         }
+    }
+
+    private static void add(String login, Map<String, Signature> signatures, Map<Signature, String> logins) {
+        Signature signature = createSignature(login);
+        signatures.put(login, signature);
+        logins.put(signature, login);
     }
 
     private static class DataBaseParsingException extends IOException {
@@ -118,7 +126,7 @@ public final class UsersContainer {
         return logins.get(signature);
     }
 
-    private Signature createSignature(String login) {
+    private static Signature createSignature(String login) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(Configuration.HASH_FUNCTION_NAME);
             messageDigest.reset();

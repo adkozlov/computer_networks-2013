@@ -5,13 +5,15 @@ import coursework.client.runnables.LecturersClientRunnable;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 
+import java.net.InetAddress;
+
 /**
  * @author adkozlov
  */
 public class LecturerClient extends Client {
 
-    public static void main(String[] args) {
-        new LecturerClient().start();
+    public LecturerClient(InetAddress serverAddress) {
+        super(serverAddress);
     }
 
     @Override
@@ -21,11 +23,11 @@ public class LecturerClient extends Client {
     }
 
     public void newTask(String courseName, String taskName, String text, long deadline) {
-        new LecturersClientRunnable(new Task(courseName, taskName, text, deadline, getSignature())).start();
+        new LecturersClientRunnable(getServerAddress(), new Task(courseName, taskName, text, deadline, getSignature())).start();
     }
 
     public void newVerdict(String studentName, String taskName, boolean accepted, String comments) {
-        new LecturersClientRunnable(new Verdict(studentName, taskName, accepted, comments, getSignature())).start();
+        new LecturersClientRunnable(getServerAddress(), new Verdict(studentName, taskName, accepted, comments, getSignature())).start();
     }
 
     @Override

@@ -7,10 +7,22 @@ import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 import coursework.server.runnables.ServerRunnable;
 
+import java.net.InetAddress;
+
 /**
  * @author adkozlov
  */
 public abstract class Client extends Thread implements IGroupable {
+
+    private final InetAddress serverAddress;
+
+    protected Client(InetAddress serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public InetAddress getServerAddress() {
+        return serverAddress;
+    }
 
     private final ServerRunnable SERVER = isStudentsObject() ? new StudentServerRunnable() : new LecturerServerRunnable();
 
@@ -28,7 +40,7 @@ public abstract class Client extends Thread implements IGroupable {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        AuthenticationClientRunnable authenticationClientRunnable = isStudentsObject() ? new StudentsAuthenticationClientRunnable(authenticationRequest) : new LecturersAuthenticationClientRunnable(authenticationRequest);
+        AuthenticationClientRunnable authenticationClientRunnable = isStudentsObject() ? new StudentsAuthenticationClientRunnable(serverAddress, authenticationRequest) : new LecturersAuthenticationClientRunnable(serverAddress, authenticationRequest);
 
         authenticationClientRunnable.start();
         while (authenticationClientRunnable.getAuthenticationResponse() == null) {

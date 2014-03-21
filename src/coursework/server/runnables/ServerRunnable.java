@@ -54,6 +54,6 @@ public abstract class ServerRunnable extends AbstractRunnable implements IGroupa
 
     @Override
     protected String getFilePath() {
-        return Configuration.SERVER_FILES_PATH;
+        return String.format(Configuration.SERVER_FILES_PATH, getServer().getServerId());
     }
 }
