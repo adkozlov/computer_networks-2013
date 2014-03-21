@@ -1,6 +1,5 @@
 package coursework;
 
-import coursework.client.LecturerClient;
 import coursework.client.StudentClient;
 import coursework.server.Server;
 
@@ -16,8 +15,8 @@ public class Main {
         new Server(0).start();
         //new Server(1).start();
 
-        InetAddress address = InetAddress.getLocalHost();
+        InetAddress address = InetAddress.getByName("192.168.1.35");
         new StudentClient(address).start();
-        new LecturerClient(address).start();
+        //new LecturerClient(address).start();
     }
 }

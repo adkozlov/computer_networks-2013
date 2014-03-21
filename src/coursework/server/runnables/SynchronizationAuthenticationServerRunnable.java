@@ -20,6 +20,11 @@ public class SynchronizationAuthenticationServerRunnable extends AuthenticationS
     }
 
     @Override
+    public void run() {
+
+    }
+
+    @Override
     protected void readAndWrite(Socket socket) throws IOException {
         Signature signature = UsersContainer.getInstance().getSignature(getFilePath());
         writeAll(socket.getInetAddress(), signature);
