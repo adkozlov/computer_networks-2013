@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 public final class Configuration {
 
     public static final int SERVERS_COUNT = 2;
-    public static final String SERVER_NAME_FORMAT = "server%d";
+    public static final String SERVER_NAME_FORMAT = "server";
 
     public static final int INT_BYTES_LENGTH = 4;
 

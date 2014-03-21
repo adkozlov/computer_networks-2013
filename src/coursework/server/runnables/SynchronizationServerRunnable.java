@@ -76,7 +76,7 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
 
     @Override
     protected SynchronizationClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject) {
-        return new SynchronizationClientRunnable(address, getServer().getServerId(), signedObject);
+        return new SynchronizationClientRunnable(address, signedObject);
     }
 
     @Override
@@ -90,6 +90,11 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     }
 
     public void synchronize(SignedObject signedObject) {
-        newClientRunnable(getServer().getAnotherServerAddress(), signedObject);
+        newClientRunnable(getServer().getAnotherServerAddress(), signedObject).start();
+    }
+
+    @Override
+    protected String getFilePath() {
+        return Configuration.SERVER_NAME_FORMAT;
     }
 }

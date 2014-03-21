@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws UnknownHostException {
         InetAddress address = InetAddress.getByName("192.168.1.35");
 
-        new Server(0, address).start();
+        new Server(address).start();
         //new Server(1).start();
 
 

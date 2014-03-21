@@ -18,16 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class Server extends Thread {
 
-    private final int serverId;
     private final InetAddress anotherServerAddress;
 
-    public Server(int serverId, InetAddress anotherServerAddress) {
-        this.serverId = serverId;
+    public Server(InetAddress anotherServerAddress) {
         this.anotherServerAddress = anotherServerAddress;
-    }
-
-    public int getServerId() {
-        return serverId;
     }
 
     public InetAddress getAnotherServerAddress() {

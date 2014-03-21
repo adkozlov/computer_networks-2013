@@ -17,12 +17,10 @@ import java.net.Socket;
  */
 public class SynchronizationClientRunnable extends AuthenticationClientRunnable {
 
-    private final int serverId;
     private final SignedObject signedObject;
 
-    public SynchronizationClientRunnable(InetAddress address, int serverId, SignedObject signedObject) {
+    public SynchronizationClientRunnable(InetAddress address, SignedObject signedObject) {
         super(address, Configuration.SYNCHRONIZATION_PORT);
-        this.serverId = serverId;
         this.signedObject = signedObject;
     }
 
@@ -53,7 +51,7 @@ public class SynchronizationClientRunnable extends AuthenticationClientRunnable 
 
     @Override
     protected String getFilePath() {
-        return String.format(Configuration.SERVER_NAME_FORMAT, serverId);
+        return Configuration.SERVER_FILES_PATH;
     }
 
     @Override
