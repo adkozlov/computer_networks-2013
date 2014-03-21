@@ -12,10 +12,12 @@ import java.net.UnknownHostException;
 public class Main {
 
     public static void main(String[] args) throws UnknownHostException {
-        new Server(0).start();
+        InetAddress address = InetAddress.getByName("192.168.1.35");
+
+        new Server(0, address).start();
         //new Server(1).start();
 
-        InetAddress address = InetAddress.getByName("192.168.1.35");
+
         new StudentClient(address).start();
         //new LecturerClient(address).start();
     }

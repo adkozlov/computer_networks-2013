@@ -7,6 +7,7 @@ import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 import coursework.server.runnables.*;
 
+import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -18,28 +19,37 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class Server extends Thread {
 
     private final int serverId;
+    private final InetAddress anotherServerAddress;
 
-    public Server(int serverId) {
+    public Server(int serverId, InetAddress anotherServerAddress) {
         this.serverId = serverId;
+        this.anotherServerAddress = anotherServerAddress;
     }
 
     public int getServerId() {
         return serverId;
     }
 
-    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this), new SynchronizationServerRunnable(this)};
+    public InetAddress getAnotherServerAddress() {
+        return anotherServerAddress;
+    }
+
+    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this)};
+    private final SynchronizationServerRunnable synchronization = new SynchronizationServerRunnable(this);
 
     @Override
     public void run() {
         for (ServerRunnable serverRunnable : SERVERS) {
             serverRunnable.start();
         }
+        synchronization.start();
     }
 
     private final Map<Signature, Task> tasks = new ConcurrentHashMap<>();
 
     public void addTask(Task task) {
         tasks.put(task.getSignature(), task);
+        synchronization.synchronize(task);
     }
 
     public Map<Signature, Task> getTasks() {
@@ -50,6 +60,7 @@ public final class Server extends Thread {
 
     public void addSolution(Solution solution) {
         solutions.put(solution.getSignature(), solution);
+        synchronization.synchronize(solution);
     }
 
     public Map<Signature, Solution> getSolutions() {
@@ -60,6 +71,7 @@ public final class Server extends Thread {
 
     public void addVerdict(Verdict verdict) {
         verdicts.put(verdict.getSignature(), verdict);
+        synchronization.synchronize(verdict);
     }
 
     public Map<Signature, Verdict> getVerdicts() {

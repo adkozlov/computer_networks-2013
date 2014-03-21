@@ -81,11 +81,15 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
 
     @Override
     protected int getPort() {
-        return Configuration.SYNCHRONIZATION_SERVER_PORT;
+        return Configuration.SYNCHRONIZATION_PORT;
     }
 
     @Override
     public boolean isStudentsObject() {
         return false;
+    }
+
+    public void synchronize(SignedObject signedObject) {
+        newClientRunnable(getServer().getAnotherServerAddress(), signedObject);
     }
 }
