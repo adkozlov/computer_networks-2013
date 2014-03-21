@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 public final class Configuration {
 
     public static final int SERVERS_COUNT = 2;
-    public static final String SERVER_NAME_FORMAT = "server";
+    public static final String SERVER_NAME = "server";
 
     public static final int INT_BYTES_LENGTH = 4;
 
@@ -30,7 +30,7 @@ public final class Configuration {
     public static final int BUFFER_LENGTH = 4096;
 
     public static final String STORAGE_PATH = "storage" + File.separator;
-    public static final String SERVER_FILES_PATH = STORAGE_PATH + SERVER_NAME_FORMAT + File.separator;
+    public static final String SERVER_FILES_PATH = STORAGE_PATH + SERVER_NAME + File.separator;
     public static final String STUDENT_FILES_PATH = STORAGE_PATH + "student" + File.separator;
     public static final String LECTURER_FILES_PATH = STORAGE_PATH + "lecturer" + File.separator;
 

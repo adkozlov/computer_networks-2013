@@ -2,7 +2,6 @@ package coursework.server.runnables;
 
 import coursework.common.Configuration;
 import coursework.common.Signature;
-import coursework.common.UsersContainer;
 import coursework.common.messages.*;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
@@ -47,8 +46,7 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
             getServer().addSolution(solution);
         }
 
-        Signature signature = UsersContainer.getInstance().getSignature(getFilePath());
-        writeAll(socket.getInetAddress(), signature);
+        writeAll(socket.getInetAddress(), getServer().getServerSignature());
     }
 
     @Override
@@ -95,6 +93,6 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
 
     @Override
     protected String getFilePath() {
-        return Configuration.SERVER_NAME_FORMAT;
+        return Configuration.SERVER_FILES_PATH;
     }
 }

@@ -74,7 +74,7 @@ public final class UsersContainer {
             }
 
             for (int i = 0; i < Configuration.SERVERS_COUNT; i++) {
-                add(String.format(Configuration.SERVER_NAME_FORMAT, i), signatures, logins);
+                add(String.format(Configuration.SERVER_NAME, i), signatures, logins);
             }
 
             this.authentication = Collections.unmodifiableMap(authentication);

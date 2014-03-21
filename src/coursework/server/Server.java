@@ -1,6 +1,8 @@
 package coursework.server;
 
+import coursework.common.Configuration;
 import coursework.common.Signature;
+import coursework.common.UsersContainer;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.common.model.Task;
@@ -43,7 +45,7 @@ public final class Server extends Thread {
 
     public void addTask(Task task) {
         tasks.put(task.getSignature(), task);
-        synchronization.synchronize(task);
+        synchronize(task, sentTasks);
     }
 
     public Map<Signature, Task> getTasks() {
@@ -54,7 +56,7 @@ public final class Server extends Thread {
 
     public void addSolution(Solution solution) {
         solutions.put(solution.getSignature(), solution);
-        synchronization.synchronize(solution);
+        synchronize(solution, sentSolutions);
     }
 
     public Map<Signature, Solution> getSolutions() {
@@ -65,7 +67,7 @@ public final class Server extends Thread {
 
     public void addVerdict(Verdict verdict) {
         verdicts.put(verdict.getSignature(), verdict);
-        synchronization.synchronize(verdict);
+        synchronize(verdict, sentVerdicts);
     }
 
     public Map<Signature, Verdict> getVerdicts() {
@@ -99,5 +101,17 @@ public final class Server extends Thread {
         signedObjects.add(signedObject);
 
         sentSignedObjects.put(signature, signedObjects);
+    }
+
+    private <E extends SignedObject> void synchronize(E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
+        if (!isSent(getServerSignature(), signedObject, sentSignedObjects)) {
+            synchronization.synchronize(signedObject);
+
+            send(getServerSignature(), signedObject, sentSignedObjects);
+        }
+    }
+
+    public static Signature getServerSignature() {
+        return UsersContainer.getInstance().getSignature(Configuration.SERVER_NAME);
     }
 }
