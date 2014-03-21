@@ -1,27 +1,31 @@
 package coursework.server.runnables;
 
 import coursework.common.Configuration;
+import coursework.common.Signature;
+import coursework.common.UsersContainer;
 import coursework.common.messages.*;
+import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
 import coursework.server.Server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 /**
  * @author adkozlov
  */
-public class SynchronizationServerRunnable extends ServerRunnable {
+public class SynchronizationServerRunnable extends AuthenticationServerRunnable {
 
     public SynchronizationServerRunnable(Server server) {
         super(server);
     }
 
     @Override
-    protected int getPort() {
-        return Configuration.SYNCHRONIZATION_PORT;
+    public void run() {
+        super.run();
     }
 
     @Override
@@ -42,6 +46,9 @@ public class SynchronizationServerRunnable extends ServerRunnable {
             writeSolution(solution);
             getServer().addSolution(solution);
         }
+
+        Signature signature = UsersContainer.getInstance().getSignature(getFilePath());
+        writeAll(socket.getInetAddress(), signature);
     }
 
     @Override
@@ -58,6 +65,23 @@ public class SynchronizationServerRunnable extends ServerRunnable {
         }
 
         throw new AbstractMessage.MessageTypeRecognizingException(type);
+    }
+
+    @Override
+    protected void writeAll(InetAddress address, Signature signature) {
+        writeTasks(address, signature);
+        writeSolution(address, signature);
+        writeVerdicts(address, signature);
+    }
+
+    @Override
+    protected SynchronizationClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject) {
+        return new SynchronizationClientRunnable(address, getServer().getServerId(), signedObject);
+    }
+
+    @Override
+    protected int getPort() {
+        return Configuration.SYNCHRONIZATION_SERVER_PORT;
     }
 
     @Override

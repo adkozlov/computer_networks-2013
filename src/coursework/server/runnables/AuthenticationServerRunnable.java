@@ -5,6 +5,7 @@ import coursework.common.Signature;
 import coursework.common.UsersContainer;
 import coursework.common.messages.AuthenticationRequestMessage;
 import coursework.common.messages.AuthenticationResponseMessage;
+import coursework.common.messages.IMessage;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 import coursework.common.model.SignedObject;
@@ -27,7 +28,7 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
 
     @Override
     protected void readAndWrite(Socket socket) throws IOException {
-        AuthenticationRequest request = readMessage(readBytes(socket)).getAuthenticationRequest();
+        AuthenticationRequest request = ((AuthenticationRequestMessage) readMessage(readBytes(socket))).getAuthenticationRequest();
 
         boolean passed = UsersContainer.getInstance().isAuthenticationPassed(request.isStudent(), request.getLogin(), request.getPasswordHashCode());
         Signature signature = null;
@@ -80,7 +81,7 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
     protected abstract ClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject);
 
     @Override
-    protected AuthenticationRequestMessage readMessage(byte[] bytes) throws IOException {
+    protected IMessage readMessage(byte[] bytes) throws IOException {
         return new AuthenticationRequestMessage(bytes);
     }
 }

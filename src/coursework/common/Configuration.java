@@ -16,8 +16,6 @@ public final class Configuration {
     protected static final String HASH_FUNCTION_NAME = "md5";
     protected static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-    //public static final String SERVER_IP = "localhost";
-
     protected static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final long AUTO_UPDATE_PERIOD = 60000 / 10;
 
@@ -44,7 +42,7 @@ public final class Configuration {
 
     public static final String AUTHENTICATION_DB_PATH = STORAGE_PATH + "authentication.db";
 
-    public static final String FILE_DELIMITER = "_::_";
+    public static final String FILE_DELIMITER = "__";
 
     public static final String SOLUTION_FILE_FORMAT = "%s" + SOLUTIONS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s";
     public static final String VERDICT_FILE_FORMAT = "%s" + VERDICTS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + VERDICT_EXTENSION;

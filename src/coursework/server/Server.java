@@ -27,7 +27,7 @@ public final class Server extends Thread {
         return serverId;
     }
 
-    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this), new SynchronizationServerRunnable(this), new SynchronizationAuthenticationServerRunnable(this)};
+    private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this), new SynchronizationServerRunnable(this)};
 
     @Override
     public void run() {
