@@ -23,11 +23,6 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     }
 
     @Override
-    public void run() {
-        super.run();
-    }
-
-    @Override
     protected void readAndWrite(Socket socket) throws IOException {
         byte[] bytes = readBytes(socket);
 

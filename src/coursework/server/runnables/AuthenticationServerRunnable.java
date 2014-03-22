@@ -56,9 +56,9 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
         for (Map.Entry<Signature, E> entry : signedObjects.entrySet()) {
             E signedObject = entry.getValue();
 
-            if (!getServer().isSent(signature, signedObject, sentSignedObjects)) {
+            if (!Server.isSent(signature, signedObject, sentSignedObjects)) {
                 newClientRunnable(address, signedObject).start();
-                getServer().send(signature, signedObject, sentSignedObjects);
+                Server.send(signature, signedObject, sentSignedObjects);
             }
         }
     }

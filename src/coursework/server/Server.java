@@ -90,7 +90,7 @@ public final class Server extends Thread implements ICleanable {
     }
 
     public static <E extends SignedObject> boolean isSent(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
-        return sentSignedObjects.containsKey(signature) && sentSignedObjects.get(signature).contains(signedObject);
+        return sentSignedObjects.keySet().contains(signature) && sentSignedObjects.get(signature).contains(signedObject);
     }
 
     public static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
