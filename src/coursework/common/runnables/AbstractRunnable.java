@@ -70,7 +70,7 @@ public abstract class AbstractRunnable extends Thread {
     }
 
     protected void writeVerdict(Verdict verdict) {
-        if (!UsersContainer.getInstance().isStudent(verdict.getSignature())) {
+        if (UsersContainer.getInstance().isStudent(verdict.getStudentName())) {
             writeFile(buildVerdictFilePath(verdict.getStudentName(), verdict.getTaskName(), verdict.isAccepted(), verdict.getSignature()), Utils.getBytes(verdict.getComments()));
         }
     }
