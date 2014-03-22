@@ -60,7 +60,9 @@ public abstract class AbstractRunnable extends Thread {
     }
 
     protected void writeTask(Task task) {
-        writeFile(buildTaskFilePath(task.getTaskName(), task.getDeadline(), task.getSignature()), Utils.getBytes(task.getText()));
+        if (!UsersContainer.getInstance().isStudent(task.getSignature())) {
+            writeFile(buildTaskFilePath(task.getTaskName(), task.getDeadline(), task.getSignature()), Utils.getBytes(task.getText()));
+        }
     }
 
     protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {
@@ -68,7 +70,9 @@ public abstract class AbstractRunnable extends Thread {
     }
 
     protected void writeVerdict(Verdict verdict) {
-        writeFile(buildVerdictFilePath(verdict.getStudentName(), verdict.getTaskName(), verdict.isAccepted(), verdict.getSignature()), Utils.getBytes(verdict.getComments()));
+        if (!UsersContainer.getInstance().isStudent(verdict.getSignature())) {
+            writeFile(buildVerdictFilePath(verdict.getStudentName(), verdict.getTaskName(), verdict.isAccepted(), verdict.getSignature()), Utils.getBytes(verdict.getComments()));
+        }
     }
 
     protected Path buildSolutionFilePath(String fileName, Signature signature, String taskName, String courseName) {
@@ -76,9 +80,11 @@ public abstract class AbstractRunnable extends Thread {
     }
 
     protected void writeSolution(Solution solution) {
-        FileWrapper fileWrapper = solution.getFileWrapper();
-        Path path = buildSolutionFilePath(fileWrapper.getFileName(), solution.getSignature(), solution.getTaskName(), solution.getCourseName());
+        if (!UsersContainer.getInstance().isLecturer(solution.getSignature())) {
+            FileWrapper fileWrapper = solution.getFileWrapper();
+            Path path = buildSolutionFilePath(fileWrapper.getFileName(), solution.getSignature(), solution.getTaskName(), solution.getCourseName());
 
-        writeFile(path, fileWrapper.getContent());
+            writeFile(path, fileWrapper.getContent());
+        }
     }
 }

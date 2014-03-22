@@ -106,12 +106,20 @@ public final class UsersContainer {
         return logins.containsKey(signature);
     }
 
-    public boolean isStudent(String login) {
+    private boolean isStudent(String login) {
         return students.containsKey(login);
     }
 
-    public boolean isLecturer(String login) {
+    private boolean isLecturer(String login) {
         return lecturers.containsKey(login);
+    }
+
+    public boolean isStudent(Signature signature) {
+        return isStudent(getLogin(signature));
+    }
+
+    public boolean isLecturer(Signature signature) {
+        return isLecturer(getLogin(signature));
     }
 
     public String getName(String login) {

@@ -94,7 +94,13 @@ public final class Server extends Thread implements ICleanable {
     }
 
     public static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
-        Set<E> signedObjects = sentSignedObjects.containsKey(signedObject) ? sentSignedObjects.get(signedObject) : new HashSet<E>();
+        Set<E> signedObjects = new HashSet<>();
+        for (Map.Entry<Signature, Set<E>> entry : sentSignedObjects.entrySet()) {
+            if (entry.getKey().equals(signature)) {
+                signedObjects = entry.getValue();
+            }
+        }
+
         signedObjects.add(signedObject);
 
         sentSignedObjects.put(signature, signedObjects);
