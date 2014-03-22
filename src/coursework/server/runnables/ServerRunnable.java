@@ -29,24 +29,26 @@ public abstract class ServerRunnable extends AbstractRunnable implements IGroupa
     public void run() {
         ServerSocket serverSocket = null;
 
-        try {
-            serverSocket = new ServerSocket(getPort());
+        while (true) {
+            try {
+                serverSocket = new ServerSocket(getPort());
 
-            while (true) {
-                Socket socket = serverSocket.accept();
+                while (true) {
+                    Socket socket = serverSocket.accept();
 
-                readAndWrite(socket);
+                    readAndWrite(socket);
 
-                socket.close();
-            }
-        } catch (IOException e) {
-            Logger.getInstance().logException(e);
-        } finally {
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                    Logger.getInstance().logException(e);
+                    socket.close();
+                }
+            } catch (IOException e) {
+                Logger.getInstance().logException(e);
+            } finally {
+                if (serverSocket != null) {
+                    try {
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        Logger.getInstance().logException(e);
+                    }
                 }
             }
         }
