@@ -19,12 +19,12 @@ public class Solution extends SignedObject {
         this.fileWrapper = fileWrapper;
     }
 
-    public Solution(Solution solution, Signature signature) {
-        super(signature);
-        courseName = solution.getCourseName();
-        taskName = solution.getTaskName();
-        fileWrapper = solution.getFileWrapper();
-    }
+//    public Solution(Solution solution, Signature signature) {
+//        super(signature);
+//        courseName = solution.getCourseName();
+//        taskName = solution.getTaskName();
+//        fileWrapper = solution.getFileWrapper();
+//    }
 
     public String getCourseName() {
         return courseName;
@@ -42,6 +42,7 @@ public class Solution extends SignedObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Solution)) return false;
+        if (!super.equals(o)) return false;
 
         Solution solution = (Solution) o;
 
@@ -55,7 +56,8 @@ public class Solution extends SignedObject {
 
     @Override
     public int hashCode() {
-        int result = courseName != null ? courseName.hashCode() : 0;
+        int result = super.hashCode();
+        result = 31 * result + (courseName != null ? courseName.hashCode() : 0);
         result = 31 * result + (taskName != null ? taskName.hashCode() : 0);
         result = 31 * result + (fileWrapper != null ? fileWrapper.hashCode() : 0);
         return result;

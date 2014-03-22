@@ -14,6 +14,6 @@ public final class Logger {
     }
 
     public void logException(Exception e) {
-        System.err.println(e.getLocalizedMessage());
+        System.err.println(e.getMessage());
     }
 }

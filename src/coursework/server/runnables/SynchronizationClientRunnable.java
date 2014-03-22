@@ -22,6 +22,10 @@ public class SynchronizationClientRunnable extends AuthenticationClientRunnable 
     public SynchronizationClientRunnable(InetAddress address, SignedObject signedObject) {
         super(address, Configuration.SYNCHRONIZATION_PORT);
         this.signedObject = signedObject;
+
+        if (signedObject instanceof Task) {
+            int i = 0;
+        }
     }
 
     @Override

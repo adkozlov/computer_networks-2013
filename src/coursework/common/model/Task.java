@@ -20,13 +20,13 @@ public class Task extends SignedObject {
         this.deadline = deadline;
     }
 
-    public Task(Task task, Signature signature) {
-        super(signature);
-        courseName = task.getCourseName();
-        taskName = task.getTaskName();
-        text = task.getText();
-        deadline = task.getDeadline();
-    }
+//    public Task(Task task, Signature signature) {
+//        super(signature);
+//        courseName = task.getCourseName();
+//        taskName = task.getTaskName();
+//        text = task.getText();
+//        deadline = task.getDeadline();
+//    }
 
     public String getCourseName() {
         return courseName;
@@ -48,10 +48,12 @@ public class Task extends SignedObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
+        if (!super.equals(o)) return false;
 
         Task task = (Task) o;
 
         if (deadline != task.deadline) return false;
+        if (courseName != null ? !courseName.equals(task.courseName) : task.courseName != null) return false;
         if (taskName != null ? !taskName.equals(task.taskName) : task.taskName != null) return false;
         if (text != null ? !text.equals(task.text) : task.text != null) return false;
 
@@ -60,7 +62,9 @@ public class Task extends SignedObject {
 
     @Override
     public int hashCode() {
-        int result = taskName != null ? taskName.hashCode() : 0;
+        int result = super.hashCode();
+        result = 31 * result + (courseName != null ? courseName.hashCode() : 0);
+        result = 31 * result + (taskName != null ? taskName.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (int) (deadline ^ (deadline >>> 32));
         return result;

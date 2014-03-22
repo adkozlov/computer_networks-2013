@@ -109,6 +109,12 @@ public final class Server extends Thread implements ICleanable {
     }
 
     private <E extends SignedObject> void add(E signedObject, Map<Signature, E> signedObjects, Map<Signature, Set<E>> sentSignedObjects) {
+        for (Map.Entry<Signature, E> entry : signedObjects.entrySet()) {
+            if (entry.getValue().equals(signedObject)) {
+                return;
+            }
+        }
+
         if (!signedObjects.values().contains(signedObject)) {
             signedObjects.put(signedObject.getSignature(), signedObject);
             synchronize(signedObject, sentSignedObjects);
