@@ -2,7 +2,6 @@ package coursework.server.runnables;
 
 import coursework.client.runnables.StudentsClientRunnable;
 import coursework.common.Configuration;
-import coursework.common.Signature;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.server.Server;
@@ -19,8 +18,8 @@ public class LecturersAuthenticationServerRunnable extends AuthenticationServerR
     }
 
     @Override
-    protected void writeAll(InetAddress address, Signature signature) {
-        writeSolution(address, signature);
+    protected void writeAll(Connection connection) {
+        writeSolution(connection);
     }
 
     @Override

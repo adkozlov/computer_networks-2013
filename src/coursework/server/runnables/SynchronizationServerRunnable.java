@@ -1,7 +1,6 @@
 package coursework.server.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.Signature;
 import coursework.common.messages.*;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
@@ -41,7 +40,7 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
             getServer().addSolution(solution);
         }
 
-        writeAll(socket.getInetAddress(), getServer().getServerSignature());
+        writeAll(getServer().getServerConnection());
     }
 
     @Override
@@ -61,10 +60,10 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     }
 
     @Override
-    protected void writeAll(InetAddress address, Signature signature) {
-        writeTasks(address, signature);
-        writeSolution(address, signature);
-        writeVerdicts(address, signature);
+    protected void writeAll(Connection connection) {
+        writeTasks(connection);
+        writeSolution(connection);
+        writeVerdicts(connection);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     }
 
     public void synchronize(SignedObject signedObject) {
-        newClientRunnable(getServer().getAnotherServerAddress(), signedObject).start();
+        newClientRunnable(getServer().getServerConnection().getAddress(), signedObject).start();
     }
 
     @Override

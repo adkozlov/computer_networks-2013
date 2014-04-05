@@ -46,36 +46,36 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
         writeMessage(socket, new AuthenticationResponseMessage(authenticationResponse));
 
         if (passed) {
-            writeAll(socket.getInetAddress(), signature);
+            writeAll(new Connection(socket.getInetAddress(), signature));
         }
     }
 
-    protected abstract void writeAll(InetAddress address, Signature signature);
+    protected abstract void writeAll(Connection connection);
 
-    protected <E extends SignedObject> void writeAll(InetAddress address, Signature signature, Map<Signature, E> signedObjects, Map<Signature, Set<E>> sentSignedObjects) {
+    protected <E extends SignedObject> void writeAll(Connection connection, Map<Signature, E> signedObjects, Map<Connection, Set<E>> sentSignedObjects) {
         for (Map.Entry<Signature, E> entry : signedObjects.entrySet()) {
             E signedObject = entry.getValue();
 
-            if (!Server.isSent(signature, signedObject, sentSignedObjects)) {
-                newClientRunnable(address, signedObject).start();
-                Server.send(signature, signedObject, sentSignedObjects);
+            if (!Server.isSent(connection, signedObject, sentSignedObjects)) {
+                newClientRunnable(connection.getAddress(), signedObject).start();
+                Server.send(connection, signedObject, sentSignedObjects);
             }
         }
     }
 
-    protected void writeTasks(InetAddress address, Signature signature) {
+    protected void writeTasks(Connection connection) {
         Server server = getServer();
-        writeAll(address, signature, server.getTasks(), server.getSentTasks());
+        writeAll(connection, server.getTasks(), server.getSentTasks());
     }
 
-    protected void writeSolution(InetAddress address, Signature signature) {
+    protected void writeSolution(Connection connection) {
         Server server = getServer();
-        writeAll(address, signature, server.getSolutions(), server.getSentSolutions());
+        writeAll(connection, server.getSolutions(), server.getSentSolutions());
     }
 
-    protected void writeVerdicts(InetAddress address, Signature signature) {
+    protected void writeVerdicts(Connection connection) {
         Server server = getServer();
-        writeAll(address, signature, server.getVerdicts(), server.getSentVerdicts());
+        writeAll(connection, server.getVerdicts(), server.getSentVerdicts());
     }
 
     protected abstract ClientRunnable newClientRunnable(InetAddress address, SignedObject signedObject);

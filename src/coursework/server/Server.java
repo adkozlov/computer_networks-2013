@@ -18,16 +18,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class Server extends Thread implements ICleanable {
 
-    private final InetAddress anotherServerAddress;
+    private final Connection anotherServerConnection;
 
     public Server(InetAddress anotherServerAddress) {
-        this.anotherServerAddress = anotherServerAddress;
+        anotherServerConnection = new Connection(anotherServerAddress, UsersContainer.getInstance().getSignature(Configuration.SERVER_NAME));
 
         Utils.cleanDirectory(getStoragePath());
     }
 
-    public InetAddress getAnotherServerAddress() {
-        return anotherServerAddress;
+    public Connection getServerConnection() {
+        return anotherServerConnection;
     }
 
     private final ServerRunnable[] SERVERS = {new StudentsAuthenticationServerRunnable(this), new LecturersAuthenticationServerRunnable(this), new StudentsServerRunnable(this), new LecturersServerRunnable(this)};
@@ -71,64 +71,53 @@ public final class Server extends Thread implements ICleanable {
         return verdicts;
     }
 
-    private final Map<Signature, Set<Task>> sentTasks = new ConcurrentHashMap<>();
+    private final Map<Connection, Set<Task>> sentTasks = new ConcurrentHashMap<>();
 
-    public Map<Signature, Set<Task>> getSentTasks() {
+    public Map<Connection, Set<Task>> getSentTasks() {
         return sentTasks;
     }
 
-    private final Map<Signature, Set<Solution>> sentSolutions = new ConcurrentHashMap<>();
+    private final Map<Connection, Set<Solution>> sentSolutions = new ConcurrentHashMap<>();
 
-    public Map<Signature, Set<Solution>> getSentSolutions() {
+    public Map<Connection, Set<Solution>> getSentSolutions() {
         return sentSolutions;
     }
 
-    private final Map<Signature, Set<Verdict>> sentVerdicts = new ConcurrentHashMap<>();
+    private final Map<Connection, Set<Verdict>> sentVerdicts = new ConcurrentHashMap<>();
 
-    public Map<Signature, Set<Verdict>> getSentVerdicts() {
+    public Map<Connection, Set<Verdict>> getSentVerdicts() {
         return sentVerdicts;
     }
 
-    public static <E extends SignedObject> boolean isSent(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
-        return sentSignedObjects.keySet().contains(signature) && sentSignedObjects.get(signature).contains(signedObject);
+    public static <E extends SignedObject> boolean isSent(Connection connection, E signedObject, Map<Connection, Set<E>> sentSignedObjects) {
+        return sentSignedObjects.containsKey(connection) && sentSignedObjects.get(connection).contains(signedObject);
     }
 
-    public static <E extends SignedObject> void send(Signature signature, E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
-        Set<E> signedObjects = new HashSet<>();
-        for (Map.Entry<Signature, Set<E>> entry : sentSignedObjects.entrySet()) {
-            if (entry.getKey().equals(signature)) {
-                signedObjects = entry.getValue();
-            }
-        }
+    public static <E extends SignedObject> void send(Connection connection, E signedObject, Map<Connection, Set<E>> sentSignedObjects) {
+        Set<E> signedObjects = sentSignedObjects.containsKey(connection) ? sentSignedObjects.get(connection) : new HashSet<E>();
 
         signedObjects.add(signedObject);
 
-        sentSignedObjects.put(signature, signedObjects);
+        sentSignedObjects.put(connection, signedObjects);
     }
 
-    private <E extends SignedObject> void synchronize(E signedObject, Map<Signature, Set<E>> sentSignedObjects) {
-        if (!isSent(getServerSignature(), signedObject, sentSignedObjects)) {
+    private <E extends SignedObject> void synchronize(E signedObject, Map<Connection, Set<E>> sentSignedObjects) {
+        if (!isSent(getServerConnection(), signedObject, sentSignedObjects)) {
             synchronization.synchronize(signedObject);
 
-            send(getServerSignature(), signedObject, sentSignedObjects);
+            send(getServerConnection(), signedObject, sentSignedObjects);
         }
     }
 
-    private <E extends SignedObject> void add(E signedObject, Map<Signature, E> signedObjects, Map<Signature, Set<E>> sentSignedObjects) {
-        for (Map.Entry<Signature, E> entry : signedObjects.entrySet()) {
-            if (entry.getValue().equals(signedObject)) {
-                return;
-            }
+    private <E extends SignedObject> void add(E signedObject, Map<Signature, E> signedObjects, Map<Connection, Set<E>> sentSignedObjects) {
+        if (signedObjects.containsValue(signedObject)) {
+            return;
         }
 
         if (!signedObjects.values().contains(signedObject)) {
             signedObjects.put(signedObject.getSignature(), signedObject);
             synchronize(signedObject, sentSignedObjects);
         }
-    }
-
-    public static Signature getServerSignature() {
-        return UsersContainer.getInstance().getSignature(Configuration.SERVER_NAME);
     }
 
     @Override
