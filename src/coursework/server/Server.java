@@ -122,6 +122,6 @@ public final class Server extends Thread implements ICleanable {
 
     @Override
     public String getStoragePath() {
-        return Configuration.SERVER_FILES_PATH_FORMAT;
+        return Configuration.SERVER_FILES_PATH;
     }
 }

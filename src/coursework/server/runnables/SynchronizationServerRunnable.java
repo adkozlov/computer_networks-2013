@@ -24,23 +24,23 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     }
 
     @Override
-    protected String getFilePath(Signature signature) {
-        return String.format(Configuration.SERVER_FILES_PATH_FORMAT, UsersContainer.getInstance().getLogin(signature));
+    protected String getFilePath() {
+        return Configuration.SERVER_FILES_PATH;
     }
 
     @Override
     protected Path buildTaskFilePath(String name, long deadline, Signature signature) {
-        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, getFilePath(signature), Utils.longToDateString(deadline), name));
+        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, getFilePath(), UsersContainer.getInstance().getLogin(signature), Utils.longToDateString(deadline), name));
     }
 
     @Override
     protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {
-        return Paths.get(String.format(Configuration.VERDICT_FILE_FORMAT, getFilePath(signature), taskName, studentName, Utils.nowToDateString(), accepted));
+        return Paths.get(String.format(Configuration.VERDICT_FILE_FORMAT, getFilePath(), UsersContainer.getInstance().getLogin(signature), taskName, studentName, Utils.nowToDateString(), accepted));
     }
 
     @Override
     protected Path buildSolutionFilePath(String fileName, Signature signature, String taskName, String courseName) {
-        return Paths.get(String.format(Configuration.SOLUTION_FILE_FORMAT, getFilePath(signature), courseName, taskName, Utils.nowToDateString(), fileName));
+        return Paths.get(String.format(Configuration.SOLUTION_FILE_FORMAT, getFilePath(), courseName, taskName, UsersContainer.getInstance().getLogin(signature), Utils.nowToDateString(), fileName));
     }
 
     @Override

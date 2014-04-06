@@ -2,6 +2,7 @@ package coursework.common.runnables;
 
 import coursework.common.Configuration;
 import coursework.common.Signature;
+import coursework.common.UsersContainer;
 import coursework.common.Utils;
 import coursework.server.Server;
 
@@ -19,12 +20,12 @@ public abstract class AbstractStudentFilesServerRunnable extends ServerRunnable 
 
     @Override
     protected Path buildTaskFilePath(String name, long deadline, Signature signature) {
-        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, getFilePath(signature), Utils.longToDateString(deadline), name));
+        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, getFilePath(), UsersContainer.getInstance().getLogin(signature), Utils.longToDateString(deadline), name));
     }
 
     @Override
     protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {
-        return Paths.get(String.format(Configuration.VERDICT_FILE_FORMAT, getFilePath(signature), taskName, studentName, Utils.nowToDateString(), accepted));
+        return Paths.get(String.format(Configuration.VERDICT_FILE_FORMAT, getFilePath(), UsersContainer.getInstance().getLogin(signature), taskName, studentName, Utils.nowToDateString(), accepted));
     }
 
     @Override

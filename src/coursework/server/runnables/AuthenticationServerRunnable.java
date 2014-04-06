@@ -93,7 +93,7 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
     }
 
     @Override
-    protected String getFilePath(Signature signature) {
+    protected String getFilePath() {
         throw createBuildFilePathException();
     }
 

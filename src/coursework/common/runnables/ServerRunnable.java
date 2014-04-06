@@ -56,7 +56,7 @@ public abstract class ServerRunnable extends AbstractRunnable implements IGroupa
         }
     }
 
-    protected abstract String getFilePath(Signature signature);
+    protected abstract String getFilePath();
 
     protected abstract Path buildTaskFilePath(String name, long deadline, Signature signature);
 

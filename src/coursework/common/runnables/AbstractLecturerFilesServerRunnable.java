@@ -2,6 +2,7 @@ package coursework.common.runnables;
 
 import coursework.common.Configuration;
 import coursework.common.Signature;
+import coursework.common.UsersContainer;
 import coursework.common.Utils;
 import coursework.server.Server;
 
@@ -29,6 +30,6 @@ public abstract class AbstractLecturerFilesServerRunnable extends ServerRunnable
 
     @Override
     protected Path buildSolutionFilePath(String fileName, Signature signature, String taskName, String courseName) {
-        return Paths.get(String.format(Configuration.SOLUTION_FILE_FORMAT, getFilePath(signature), courseName, taskName, Utils.nowToDateString(), fileName));
+        return Paths.get(String.format(Configuration.SOLUTION_FILE_FORMAT, getFilePath(), courseName, taskName, UsersContainer.getInstance().getLogin(signature), Utils.nowToDateString(), fileName));
     }
 }

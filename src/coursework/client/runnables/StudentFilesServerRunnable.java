@@ -1,7 +1,6 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.Signature;
 import coursework.common.messages.AbstractMessage;
 import coursework.common.messages.IMessage;
 import coursework.common.messages.TaskMessage;
@@ -58,7 +57,7 @@ public class StudentFilesServerRunnable extends AbstractStudentFilesServerRunnab
     }
 
     @Override
-    protected String getFilePath(Signature signature) {
+    protected String getFilePath() {
         return Configuration.STUDENT_FILES_PATH;
     }
 }

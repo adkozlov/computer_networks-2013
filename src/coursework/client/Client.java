@@ -28,7 +28,7 @@ public abstract class Client extends Thread implements IGroupable, ICleanable {
         return serverAddress;
     }
 
-    private final ServerRunnable SERVER = isStudentsObject() ? new StudentFilesServerRunnable() : new LecturerServerRunnable();
+    private final ServerRunnable SERVER = isStudentsObject() ? new StudentFilesServerRunnable() : new LecturerFilesServerRunnable();
 
     @Override
     public void run() {

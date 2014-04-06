@@ -1,8 +1,6 @@
 package coursework.server.runnables;
 
 import coursework.common.Configuration;
-import coursework.common.Signature;
-import coursework.common.UsersContainer;
 import coursework.common.messages.SolutionMessage;
 import coursework.common.model.Solution;
 import coursework.common.runnables.AbstractLecturerFilesServerRunnable;
@@ -21,8 +19,8 @@ public class StudentsServerRunnable extends AbstractLecturerFilesServerRunnable 
     }
 
     @Override
-    protected String getFilePath(Signature signature) {
-        return String.format(Configuration.SERVER_FILES_PATH_FORMAT, UsersContainer.getInstance().getLogin(signature));
+    protected String getFilePath() {
+        return Configuration.SERVER_FILES_PATH;
     }
 
     @Override
