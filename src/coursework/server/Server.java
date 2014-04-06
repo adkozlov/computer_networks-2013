@@ -43,8 +43,8 @@ public final class Server extends Thread implements ICleanable {
 
     private final Map<Signature, Task> tasks = new ConcurrentHashMap<>();
 
-    public void addTask(Task task) {
-        add(task, tasks, sentTasks);
+    public void addTask(Task task, boolean isServer) {
+        add(task, tasks, sentTasks, isServer);
     }
 
     public Map<Signature, Task> getTasks() {
@@ -53,8 +53,8 @@ public final class Server extends Thread implements ICleanable {
 
     private final Map<Signature, Solution> solutions = new ConcurrentHashMap<>();
 
-    public void addSolution(Solution solution) {
-        add(solution, solutions, sentSolutions);
+    public void addSolution(Solution solution, boolean isServer) {
+        add(solution, solutions, sentSolutions, isServer);
     }
 
     public Map<Signature, Solution> getSolutions() {
@@ -63,8 +63,8 @@ public final class Server extends Thread implements ICleanable {
 
     private final Map<Signature, Verdict> verdicts = new ConcurrentHashMap<>();
 
-    public void addVerdict(Verdict verdict) {
-        add(verdict, verdicts, sentVerdicts);
+    public void addVerdict(Verdict verdict, boolean isServer) {
+        add(verdict, verdicts, sentVerdicts, isServer);
     }
 
     public Map<Signature, Verdict> getVerdicts() {
@@ -109,14 +109,13 @@ public final class Server extends Thread implements ICleanable {
         }
     }
 
-    private <E extends SignedObject> void add(E signedObject, Map<Signature, E> signedObjects, Map<Connection, Set<E>> sentSignedObjects) {
-        if (signedObjects.containsValue(signedObject)) {
-            return;
-        }
-
+    private <E extends SignedObject> void add(E signedObject, Map<Signature, E> signedObjects, Map<Connection, Set<E>> sentSignedObjects, boolean isServer) {
         if (!signedObjects.values().contains(signedObject)) {
             signedObjects.put(signedObject.getSignature(), signedObject);
-            synchronize(signedObject, sentSignedObjects);
+
+            if (!isServer) {
+                synchronize(signedObject, sentSignedObjects);
+            }
         }
     }
 

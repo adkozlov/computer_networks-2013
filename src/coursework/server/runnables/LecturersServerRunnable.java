@@ -34,11 +34,11 @@ public class LecturersServerRunnable extends ServerRunnable {
         if (message instanceof TaskMessage) {
             Task task = ((TaskMessage) message).getTask();
             writeTask(task);
-            getServer().addTask(task);
+            getServer().addTask(task, false);
         } else if (message instanceof VerdictMessage) {
             Verdict verdict = ((VerdictMessage) message).getVerdict();
             writeVerdict(verdict);
-            getServer().addVerdict(verdict);
+            getServer().addVerdict(verdict, false);
         }
     }
 

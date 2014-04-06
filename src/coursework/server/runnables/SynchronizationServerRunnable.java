@@ -29,15 +29,15 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
         if (message instanceof TaskMessage) {
             Task task = ((TaskMessage) message).getTask();
             writeTask(task);
-            getServer().addTask(task);
+            getServer().addTask(task, true);
         } else if (message instanceof VerdictMessage) {
             Verdict verdict = ((VerdictMessage) message).getVerdict();
             writeVerdict(verdict);
-            getServer().addVerdict(verdict);
+            getServer().addVerdict(verdict, true);
         } else if (message instanceof SolutionMessage) {
             Solution solution = ((SolutionMessage) message).getSolution();
             writeSolution(solution);
-            getServer().addSolution(solution);
+            getServer().addSolution(solution, true);
         }
 
         writeAll(getServer().getServerConnection());

@@ -26,7 +26,7 @@ public class StudentsServerRunnable extends ServerRunnable {
     protected void readAndWrite(Socket socket) throws IOException {
         Solution solution = readMessage(readBytes(socket)).getSolution();
         writeSolution(solution);
-        getServer().addSolution(solution);
+        getServer().addSolution(solution, false);
     }
 
     @Override
