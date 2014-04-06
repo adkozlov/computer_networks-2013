@@ -102,9 +102,11 @@ public final class Server extends Thread implements ICleanable {
         sentSignedObjects.put(connection, signedObjects);
     }
 
-    private <E extends SignedObject> void synchronize(E signedObject, Map<Connection, Set<E>> sentSignedObjects) {
+    private <E extends SignedObject> void synchronize(E signedObject, Map<Connection, Set<E>> sentSignedObjects, boolean isServer) {
         if (!isSent(getServerConnection(), signedObject, sentSignedObjects)) {
-            synchronization.synchronize(signedObject);
+            if (!isServer) {
+                synchronization.synchronize(signedObject);
+            }
 
             send(getServerConnection(), signedObject, sentSignedObjects);
         }
@@ -114,9 +116,7 @@ public final class Server extends Thread implements ICleanable {
         if (!signedObjects.values().contains(signedObject)) {
             signedObjects.put(signedObject.getSignature(), signedObject);
 
-            if (!isServer) {
-                synchronize(signedObject, sentSignedObjects);
-            }
+            synchronize(signedObject, sentSignedObjects, isServer);
         }
     }
 
