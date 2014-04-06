@@ -2,6 +2,7 @@ package coursework.server.runnables;
 
 import coursework.client.runnables.LecturersClientRunnable;
 import coursework.common.Configuration;
+import coursework.common.Connection;
 import coursework.common.model.SignedObject;
 import coursework.server.Server;
 

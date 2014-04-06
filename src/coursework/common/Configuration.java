@@ -30,7 +30,7 @@ public final class Configuration {
     public static final int BUFFER_LENGTH = 4096;
 
     public static final String STORAGE_PATH = "storage" + File.separator;
-    public static final String SERVER_FILES_PATH = STORAGE_PATH + SERVER_NAME + File.separator;
+    public static final String SERVER_FILES_PATH_FORMAT = STORAGE_PATH + SERVER_NAME + File.separator + "%s" + File.separator;
     public static final String STUDENT_FILES_PATH = STORAGE_PATH + "student" + File.separator;
     public static final String LECTURER_FILES_PATH = STORAGE_PATH + "lecturer" + File.separator;
 
@@ -44,7 +44,7 @@ public final class Configuration {
 
     public static final String FILE_DELIMITER = "__";
 
-    public static final String SOLUTION_FILE_FORMAT = "%s" + SOLUTIONS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s";
-    public static final String VERDICT_FILE_FORMAT = "%s" + VERDICTS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + VERDICT_EXTENSION;
-    public static final String TASK_FILE_FORMAT = "%s" + TASKS_FOLDER + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + TASK_EXTENSION;
+    public static final String SOLUTION_FILE_FORMAT = "%s" + SOLUTIONS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s";
+    public static final String VERDICT_FILE_FORMAT = "%s" + VERDICTS_FOLDER + "%s" + File.separator + "%s" + File.separator + "%s" + FILE_DELIMITER + "%s" + VERDICT_EXTENSION;
+    public static final String TASK_FILE_FORMAT = "%s" + TASKS_FOLDER + "%s" + FILE_DELIMITER + "%s" + TASK_EXTENSION;
 }

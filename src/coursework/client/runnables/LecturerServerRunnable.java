@@ -1,10 +1,11 @@
 package coursework.client.runnables;
 
 import coursework.common.Configuration;
+import coursework.common.Signature;
 import coursework.common.messages.AbstractMessage;
 import coursework.common.messages.IMessage;
 import coursework.common.messages.SolutionMessage;
-import coursework.server.runnables.ServerRunnable;
+import coursework.common.runnables.AbstractLecturerFilesServerRunnable;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -12,7 +13,7 @@ import java.net.Socket;
 /**
  * @author adkozlov
  */
-public class LecturerServerRunnable extends ServerRunnable {
+public class LecturerServerRunnable extends AbstractLecturerFilesServerRunnable {
 
     public LecturerServerRunnable() {
         super(null);
@@ -52,7 +53,7 @@ public class LecturerServerRunnable extends ServerRunnable {
     }
 
     @Override
-    protected String getFilePath() {
+    protected String getFilePath(Signature signature) {
         return Configuration.LECTURER_FILES_PATH;
     }
 }

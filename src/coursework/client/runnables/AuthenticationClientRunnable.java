@@ -6,6 +6,7 @@ import coursework.common.messages.AuthenticationRequestMessage;
 import coursework.common.messages.AuthenticationResponseMessage;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
+import coursework.common.runnables.ClientRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,11 +36,6 @@ public abstract class AuthenticationClientRunnable extends ClientRunnable {
     public AuthenticationClientRunnable(InetAddress address, AuthenticationRequest authenticationRequest) {
         super(address);
         this.authenticationRequest = authenticationRequest;
-    }
-
-    protected AuthenticationClientRunnable(InetAddress address, int port) {
-        super(address, port);
-        authenticationRequest = null;
     }
 
     public AuthenticationResponse getAuthenticationResponse() {

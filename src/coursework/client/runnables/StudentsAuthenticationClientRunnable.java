@@ -23,9 +23,4 @@ public class StudentsAuthenticationClientRunnable extends AuthenticationClientRu
     protected int getPort() {
         return Configuration.STUDENTS_AUTHENTICATION_PORT;
     }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.STUDENT_FILES_PATH;
-    }
 }

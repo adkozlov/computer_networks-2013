@@ -1,6 +1,6 @@
 package coursework.server.runnables;
 
-import coursework.common.Configuration;
+import coursework.common.*;
 import coursework.common.messages.*;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
@@ -11,6 +11,8 @@ import coursework.server.Server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author adkozlov
@@ -19,6 +21,26 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
 
     public SynchronizationServerRunnable(Server server) {
         super(server);
+    }
+
+    @Override
+    protected String getFilePath(Signature signature) {
+        return String.format(Configuration.SERVER_FILES_PATH_FORMAT, UsersContainer.getInstance().getLogin(signature));
+    }
+
+    @Override
+    protected Path buildTaskFilePath(String name, long deadline, Signature signature) {
+        return Paths.get(String.format(Configuration.TASK_FILE_FORMAT, getFilePath(signature), Utils.longToDateString(deadline), name));
+    }
+
+    @Override
+    protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {
+        return Paths.get(String.format(Configuration.VERDICT_FILE_FORMAT, getFilePath(signature), taskName, studentName, Utils.nowToDateString(), accepted));
+    }
+
+    @Override
+    protected Path buildSolutionFilePath(String fileName, Signature signature, String taskName, String courseName) {
+        return Paths.get(String.format(Configuration.SOLUTION_FILE_FORMAT, getFilePath(signature), courseName, taskName, Utils.nowToDateString(), fileName));
     }
 
     @Override
@@ -62,7 +84,7 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
     @Override
     protected void writeAll(Connection connection) {
         writeTasks(connection);
-        writeSolution(connection);
+        writeSolutions(connection);
         writeVerdicts(connection);
     }
 
@@ -83,10 +105,5 @@ public class SynchronizationServerRunnable extends AuthenticationServerRunnable 
 
     public void synchronize(SignedObject signedObject) {
         newClientRunnable(getServer().getServerConnection().getAddress(), signedObject).start();
-    }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.SERVER_FILES_PATH;
     }
 }

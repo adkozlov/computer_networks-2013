@@ -2,6 +2,7 @@ package coursework.server.runnables;
 
 import coursework.client.runnables.StudentsClientRunnable;
 import coursework.common.Configuration;
+import coursework.common.Connection;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.server.Server;
@@ -19,7 +20,7 @@ public class LecturersAuthenticationServerRunnable extends AuthenticationServerR
 
     @Override
     protected void writeAll(Connection connection) {
-        writeSolution(connection);
+        writeSolutions(connection);
     }
 
     @Override

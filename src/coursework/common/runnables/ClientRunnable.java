@@ -1,8 +1,7 @@
-package coursework.client.runnables;
+package coursework.common.runnables;
 
 import coursework.client.IGroupable;
 import coursework.common.Logger;
-import coursework.common.runnables.AbstractRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -7,7 +7,7 @@ import coursework.common.Signature;
 import coursework.common.Utils;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
-import coursework.server.runnables.ServerRunnable;
+import coursework.common.runnables.ServerRunnable;
 
 import java.net.InetAddress;
 
@@ -28,7 +28,7 @@ public abstract class Client extends Thread implements IGroupable, ICleanable {
         return serverAddress;
     }
 
-    private final ServerRunnable SERVER = isStudentsObject() ? new StudentServerRunnable() : new LecturerServerRunnable();
+    private final ServerRunnable SERVER = isStudentsObject() ? new StudentFilesServerRunnable() : new LecturerServerRunnable();
 
     @Override
     public void run() {

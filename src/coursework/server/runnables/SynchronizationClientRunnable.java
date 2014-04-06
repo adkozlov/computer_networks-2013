@@ -1,12 +1,12 @@
 package coursework.server.runnables;
 
-import coursework.client.runnables.AuthenticationClientRunnable;
 import coursework.common.Configuration;
 import coursework.common.messages.*;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
+import coursework.common.runnables.ClientRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -15,7 +15,7 @@ import java.net.Socket;
 /**
  * @author adkozlov
  */
-public class SynchronizationClientRunnable extends AuthenticationClientRunnable {
+public class SynchronizationClientRunnable extends ClientRunnable {
 
     private final SignedObject signedObject;
 
@@ -47,11 +47,6 @@ public class SynchronizationClientRunnable extends AuthenticationClientRunnable 
     @Override
     protected int getPort() {
         return Configuration.SYNCHRONIZATION_PORT;
-    }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.SERVER_FILES_PATH;
     }
 
     @Override

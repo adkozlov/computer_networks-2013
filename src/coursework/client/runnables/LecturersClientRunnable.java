@@ -7,6 +7,7 @@ import coursework.common.messages.VerdictMessage;
 import coursework.common.model.SignedObject;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
+import coursework.common.runnables.ClientRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -46,11 +47,6 @@ public class LecturersClientRunnable extends ClientRunnable {
     @Override
     protected SolutionMessage readMessage(byte[] bytes) throws IOException {
         return new SolutionMessage(bytes);
-    }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.LECTURER_FILES_PATH;
     }
 
     @Override

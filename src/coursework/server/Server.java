@@ -5,6 +5,7 @@ import coursework.common.model.SignedObject;
 import coursework.common.model.Solution;
 import coursework.common.model.Task;
 import coursework.common.model.Verdict;
+import coursework.common.runnables.ServerRunnable;
 import coursework.server.runnables.*;
 
 import java.net.InetAddress;
@@ -121,6 +122,6 @@ public final class Server extends Thread implements ICleanable {
 
     @Override
     public String getStoragePath() {
-        return Configuration.SERVER_FILES_PATH;
+        return Configuration.SERVER_FILES_PATH_FORMAT;
     }
 }

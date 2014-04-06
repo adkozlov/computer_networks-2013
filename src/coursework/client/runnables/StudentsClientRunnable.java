@@ -3,6 +3,7 @@ package coursework.client.runnables;
 import coursework.common.Configuration;
 import coursework.common.messages.*;
 import coursework.common.model.Solution;
+import coursework.common.runnables.ClientRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -49,11 +50,6 @@ public class StudentsClientRunnable extends ClientRunnable {
         }
 
         throw new AbstractMessage.MessageTypeRecognizingException(type);
-    }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.STUDENT_FILES_PATH;
     }
 
     @Override

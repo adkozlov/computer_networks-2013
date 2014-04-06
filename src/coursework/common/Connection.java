@@ -1,6 +1,4 @@
-package coursework.server.runnables;
-
-import coursework.common.Signature;
+package coursework.common;
 
 import java.net.InetAddress;
 

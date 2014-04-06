@@ -1,6 +1,6 @@
 package coursework.server.runnables;
 
-import coursework.client.runnables.ClientRunnable;
+import coursework.common.Connection;
 import coursework.common.Signature;
 import coursework.common.UsersContainer;
 import coursework.common.messages.AuthenticationRequestMessage;
@@ -9,11 +9,14 @@ import coursework.common.messages.IMessage;
 import coursework.common.model.AuthenticationRequest;
 import coursework.common.model.AuthenticationResponse;
 import coursework.common.model.SignedObject;
+import coursework.common.runnables.ClientRunnable;
+import coursework.common.runnables.ServerRunnable;
 import coursework.server.Server;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +71,7 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
         writeAll(connection, server.getTasks(), server.getSentTasks());
     }
 
-    protected void writeSolution(Connection connection) {
+    protected void writeSolutions(Connection connection) {
         Server server = getServer();
         writeAll(connection, server.getSolutions(), server.getSentSolutions());
     }
@@ -83,5 +86,29 @@ public abstract class AuthenticationServerRunnable extends ServerRunnable {
     @Override
     protected IMessage readMessage(byte[] bytes) throws IOException {
         return new AuthenticationRequestMessage(bytes);
+    }
+
+    private UnsupportedOperationException createBuildFilePathException() {
+        return new UnsupportedOperationException("File path cannot be built by authentication server");
+    }
+
+    @Override
+    protected String getFilePath(Signature signature) {
+        throw createBuildFilePathException();
+    }
+
+    @Override
+    protected Path buildTaskFilePath(String name, long deadline, Signature signature) {
+        throw createBuildFilePathException();
+    }
+
+    @Override
+    protected Path buildVerdictFilePath(String studentName, String taskName, boolean accepted, Signature signature) {
+        throw createBuildFilePathException();
+    }
+
+    @Override
+    protected Path buildSolutionFilePath(String fileName, Signature signature, String taskName, String courseName) {
+        throw createBuildFilePathException();
     }
 }

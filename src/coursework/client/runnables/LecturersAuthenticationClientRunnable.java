@@ -23,9 +23,4 @@ public class LecturersAuthenticationClientRunnable extends AuthenticationClientR
     protected int getPort() {
         return Configuration.LECTURERS_AUTHENTICATION_PORT;
     }
-
-    @Override
-    protected String getFilePath() {
-        return Configuration.LECTURER_FILES_PATH;
-    }
 }
